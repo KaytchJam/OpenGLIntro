@@ -4,11 +4,19 @@
 #include <fstream>
 #include <sstream>
 
+/// <summary>
+/// Struct with the source code of our shader types as string fields
+/// </summary>
 struct ShaderProgramSource {
     std::string vertexSource;
     std::string fragmentSource;
 };
 
+/// <summary>
+/// Parser for our .shader type files, reads the file source code and returns it as a string.
+/// </summary>
+/// <param name="filepath">filepath to the .shader file we want to use.</param>
+/// <returns>Returns a ShaderProgramSource struct containing all shader source code strings as fields.</returns>
 static ShaderProgramSource parseShader(const std::string& filepath) {
     std::ifstream stream(filepath);
 
