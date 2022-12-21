@@ -41,7 +41,7 @@ int main(void) {
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     // DRAWING A TRAPEZOID
-    float positions[12] = {
+    float positions[8] = {
         -0.5, 0.5,
         -0.7, -0.5,
          0.7, -0.5,
@@ -53,18 +53,12 @@ int main(void) {
         2, 3, 0
     };
 
-    unsigned int vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
-
     VertexArray va;
     VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+
     VertexBufferLayout layout;
     layout.push<float>(2);
     va.addBuffer(vb, layout);
-
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
 
     IndexBuffer ib(indices, 6);
 

@@ -17,6 +17,14 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 
 	for (unsigned int i = 0; i < elements.size(); i++) {
 		const VertexBufferElement& element = elements[i];
+
+		/*std::cout << "Index: " << i << std::endl;
+		std::cout << "Element.count = " << element.count << std::endl;
+		std::cout << "Element.type = " << element.type << std::endl;
+		std::cout << "Element.normalized = " << (int) element.normalized << std::endl;
+		std::cout << "Layout.getStride = " << layout.getStride() << std::endl;
+		std::cout << "Offset: " << offset << std::endl;*/
+
 		GLCall(glEnableVertexAttribArray(i));
 		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*) offset));
 		offset += element.count * VertexBufferElement::getTypeSize(element.type);
