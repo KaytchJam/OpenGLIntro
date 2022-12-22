@@ -5,7 +5,7 @@ Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(path), m
 	stbi_set_flip_vertically_on_load(1); // opengl loads images from bottom left so we need to flip it
 	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BitsPerPixel, 4);
 
-	std::printf("Local Buffer value: 0x%p\n", m_LocalBuffer);
+	//std::printf("Local Buffer value: 0x%p\n", m_LocalBuffer);
 
 	GLCall(glGenTextures(1, &m_RendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));

@@ -72,13 +72,13 @@ int main(void) {
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
-    std::cout << "Shader established for color." << std::endl;
+    /*std::cout << "Shader established for color." << std::endl;*/
 
     Texture texture("res/textures/Data_Heart.png");
     texture.Bind();
     shader.setUniform1i("u_Texture", 0);
 
-    std::cout << "Shader established for texture." << std::endl;
+    /*std::cout << "Shader established for texture." << std::endl;*/
 
     va.UnBind();
     shader.UnBind();
