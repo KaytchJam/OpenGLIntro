@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include "glm/glm.hpp"
 
 /// <summary>
 /// Struct with the source code of our shader types as string fields
@@ -27,6 +28,7 @@ public:
 	void setUniform1i(const std::string& name, int value);
 	void setUniform1f(const std::string& name, float value);
 	void setUniform4f(const std::string& name, float v0, float v1, float f2, float f3);
+	void setUniformMat4f(const std::string& name, glm::mat4& matrix);
 private:
 	ShaderProgramSource parseShader(const std::string& filepath);
 	unsigned int compileShader(unsigned int type, const std::string& source);

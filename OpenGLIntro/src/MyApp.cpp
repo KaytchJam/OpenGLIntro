@@ -44,12 +44,12 @@ int main(void) {
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    // DRAWING A TRAPEZOID
+    // DRAWING A SQUARE
     float positions[] = {
-        -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f
+        100.0f, 100.0f,  0.0f, 0.0f, // bottom left of square - 0
+        200.0f, 100.0f,  1.0f, 0.0f, // bottom right - 1
+        200.0f, 200.0f,  1.0f, 1.0f, // top right - 2
+        100.0f, 200.0f, 0.0f,  1.0f  // top left - 3
     };
 
     unsigned int indices[] = {
@@ -57,7 +57,6 @@ int main(void) {
         2, 3, 0
     };
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
     glEnable(GL_BLEND);
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -72,10 +71,21 @@ int main(void) {
 
     IndexBuffer ib(indices, 6);
 
+    // generate orthogonal matrix for projection
+    //                          X DOMAIN      Y DOMAIN      Z DOMAIN
+    // CONVERTS OUR POSITION COORDINATES TO FIT WITHIN THIS DOMAIN
+    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(200, 200, 0));
+
+    // matrix multiplication goes from right to left, so we multiply MVP in reverse order
+    glm::mat4 mvp = proj * view * model;
+
     Shader shader("res/shaders/Basic.shader");
 
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
+    shader.setUniformMat4f("u_ModelViewProjection", mvp); // sending our projection to our shader
 
     Texture texture("res/textures/Data_Heart.png");
     texture.Bind();
