@@ -44,10 +44,10 @@ int main(void) {
 
     // DRAWING A TRAPEZOID
     float positions[] = {
-        -0.5,  0.5,  0.0f, 0.0f,
-        -0.7, -0.5, 1.0f, 0.0f,
-         0.7, -0.5, 1.0f, 1.0f,
-         0.5, 0.5, 0.0f, 1.0f
+        -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 1.0f
     };
 
     unsigned int indices[] = {
@@ -65,13 +65,20 @@ int main(void) {
 
     IndexBuffer ib(indices, 6);
 
+    //std::cout << "Syntax error check" << std::endl;
     Shader shader("res/shaders/Basic.shader");
+    //std::cout << "Syntax error check" << std::endl;
+
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
-    Texture texture("res/textures/Custom_Texture_Cleaned.png");
+    std::cout << "Shader established for color." << std::endl;
+
+    Texture texture("res/textures/Data_Heart.png");
     texture.Bind();
     shader.setUniform1i("u_Texture", 0);
+
+    std::cout << "Shader established for texture." << std::endl;
 
     va.UnBind();
     shader.UnBind();

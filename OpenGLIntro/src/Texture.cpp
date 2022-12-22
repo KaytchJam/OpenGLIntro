@@ -1,11 +1,11 @@
 #include "Texture.h"
 #include "vendor/stb_image/stb_image.h"
 
-Texture::Texture(const std::string& path) : m_FilePath(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0) {
-	GLCall(glGenTextures(1, &m_RendererID));
-	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
+Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0) {
 	stbi_set_flip_vertically_on_load(1); // opengl loads images from bottom left so we need to flip it
-	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height,&m_BitsPerPixel, 4);
+	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BitsPerPixel, 4);
+
+	std::printf("Local Buffer value: 0x%p\n", m_LocalBuffer);
 
 	GLCall(glGenTextures(1, &m_RendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
@@ -13,7 +13,7 @@ Texture::Texture(const std::string& path) : m_FilePath(path), m_LocalBuffer(null
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
@@ -33,4 +33,5 @@ void Texture::Bind(unsigned int slot) const {
 }
 
 void Texture::UnBind() const {
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
