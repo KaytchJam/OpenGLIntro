@@ -11,6 +11,8 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 int main(void) {
     GLFWwindow* window;
@@ -55,6 +57,11 @@ int main(void) {
         2, 3, 0
     };
 
+    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
+    glEnable(GL_BLEND);
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
     VertexArray va;
     VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
@@ -65,20 +72,14 @@ int main(void) {
 
     IndexBuffer ib(indices, 6);
 
-    //std::cout << "Syntax error check" << std::endl;
     Shader shader("res/shaders/Basic.shader");
-    //std::cout << "Syntax error check" << std::endl;
 
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
-    /*std::cout << "Shader established for color." << std::endl;*/
-
     Texture texture("res/textures/Data_Heart.png");
     texture.Bind();
     shader.setUniform1i("u_Texture", 0);
-
-    /*std::cout << "Shader established for texture." << std::endl;*/
 
     va.UnBind();
     shader.UnBind();
