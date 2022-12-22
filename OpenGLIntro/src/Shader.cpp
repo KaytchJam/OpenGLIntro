@@ -50,13 +50,16 @@ ShaderProgramSource Shader::parseShader(const std::string& filepath) {
 
 
 unsigned int Shader::compileShader(unsigned int type, const std::string& source) {
+    //std::printf("type: %x\n%s\n", type, source.c_str());
     unsigned int id = glCreateShader(type);
     const char* src = source.c_str(); // returns a pointer to our source std::string
     glShaderSource(id, 1, &src, nullptr);
     glCompileShader(id);
 
     int result;
+    //std::cout << "Color error" << std::endl;
     glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+    //std::cout << "color error" << std::endl;
 
     if (result == GL_FALSE) {
         int length;
@@ -78,11 +81,14 @@ unsigned int Shader::createShader(const std::string& vertexShader, const std::st
     unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader);
     unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
+    std::printf("vs: 0x%x\n", vs);
+    std::printf("fs: 0x%x\n", fs);
 
-    glLinkProgram(program);
-    glValidateProgram(program);
+    GLCall(glAttachShader(program, vs));
+    GLCall(glAttachShader(program, fs));
+
+    GLCall(glLinkProgram(program));
+    GLCall(glValidateProgram(program));
 
     // take care of the OBJ files
     glDeleteShader(vs);
