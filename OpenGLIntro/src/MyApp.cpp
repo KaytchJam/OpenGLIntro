@@ -3,12 +3,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
 #include "ErrorManager.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "Texture.h"
 
 int main(void) {
     GLFWwindow* window;
@@ -41,11 +43,11 @@ int main(void) {
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     // DRAWING A TRAPEZOID
-    float positions[8] = {
-        -0.5, 0.5,
-        -0.7, -0.5,
-         0.7, -0.5,
-         0.5, 0.5
+    float positions[] = {
+        -0.5,  0.5,  0.0f, 0.0f,
+        -0.7, -0.5, 1.0f, 0.0f,
+         0.7, -0.5, 1.0f, 1.0f,
+         0.5, 0.5, 0.0f, 1.0f
     };
 
     unsigned int indices[] = {
@@ -54,9 +56,10 @@ int main(void) {
     };
 
     VertexArray va;
-    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+    VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
     VertexBufferLayout layout;
+    layout.push<float>(2);
     layout.push<float>(2);
     va.addBuffer(vb, layout);
 
@@ -65,6 +68,10 @@ int main(void) {
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
+
+    Texture texture("res/textures/Custom_Texture_Cleaned.png");
+    texture.Bind();
+    shader.setUniform1i("u_Texture", 0);
 
     va.UnBind();
     shader.UnBind();
