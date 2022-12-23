@@ -18,6 +18,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "tests/TestClearColor.h"
 
 int main(void) {
     GLFWwindow* window;
@@ -50,17 +51,17 @@ int main(void) {
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     // DRAWING A SQUARE
-    float positions[] = {
-        -50.0f, -50.0f,  0.0f, 0.0f, // bottom left of square - 0
-        50.0f, -50.0f,  1.0f, 0.0f, // bottom right - 1
-        50.0f, 50.0f,  1.0f, 1.0f, // top right - 2
-        -50.0f, 50.0f, 0.0f,  1.0f  // top left - 3
-    };
+    //float positions[] = {
+    //    -50.0f, -50.0f,  0.0f, 0.0f, // bottom left of square - 0
+    //    50.0f, -50.0f,  1.0f, 0.0f, // bottom right - 1
+    //    50.0f, 50.0f,  1.0f, 1.0f, // top right - 2
+    //    -50.0f, 50.0f, 0.0f,  1.0f  // top left - 3
+    //};
 
-    unsigned int indices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
+    //unsigned int indices[] = {
+    //    0, 1, 2,
+    //    2, 3, 0
+    //};
 
 
     glEnable(GL_BLEND);
@@ -108,6 +109,8 @@ int main(void) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     // IMGUI END
+
+    test::TestClearColor tst;
     
    /* glm::vec3 translationA(200, 200, 0);
     glm::vec3 translationB(400, 200, 0);
@@ -125,10 +128,21 @@ int main(void) {
 
         renderer.Clear();
 
+        tst.onUpdate(0.0f);
+        tst.onRender();
+
         // generate IMGUI new frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        ImGui::Begin("Color Window");
+        tst.onImGuiRender();
+        ImGui::End();
+
+        ImGui::EndFrame();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         //// Object 1 Rendering
         //{
