@@ -51,10 +51,10 @@ int main(void) {
 
     // DRAWING A SQUARE
     float positions[] = {
-        100.0f, 100.0f,  0.0f, 0.0f, // bottom left of square - 0
-        200.0f, 100.0f,  1.0f, 0.0f, // bottom right - 1
-        200.0f, 200.0f,  1.0f, 1.0f, // top right - 2
-        100.0f, 200.0f, 0.0f,  1.0f  // top left - 3
+        -50.0f, -50.0f,  0.0f, 0.0f, // bottom left of square - 0
+        50.0f, -50.0f,  1.0f, 0.0f, // bottom right - 1
+        50.0f, 50.0f,  1.0f, 1.0f, // top right - 2
+        -50.0f, 50.0f, 0.0f,  1.0f  // top left - 3
     };
 
     unsigned int indices[] = {
@@ -80,17 +80,11 @@ int main(void) {
     //                          X DOMAIN      Y DOMAIN      Z DOMAIN
     // CONVERTS OUR POSITION COORDINATES TO FIT WITHIN THIS DOMAIN
     glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
-    glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(200, 200, 0));
-
-    // matrix multiplication goes from right to left, so we multiply MVP in reverse order
-    glm::mat4 mvp = proj * view * model;
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
 
     Shader shader("res/shaders/Basic.shader");
-
     shader.Bind();
     shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-    shader.setUniformMat4f("u_ModelViewProjection", mvp); // sending our projection to our shader
 
     Texture texture("res/textures/Data_Heart.png");
     texture.Bind();
@@ -115,7 +109,8 @@ int main(void) {
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     // IMGUI END
     
-    glm::vec3 translation(200, 200, 0);
+    glm::vec3 translationA(200, 200, 0);
+    glm::vec3 translationB(400, 200, 0);
 
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -138,19 +133,24 @@ int main(void) {
         // here
         //glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
         //glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
-        glm::mat4 model = glm::translate(glm::mat4(1.0), translation);
-        glm::mat4 mvp = proj * view * model;
 
         // end here
 
-        shader.Bind();
-        shader.setUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-        shader.setUniformMat4f("u_ModelViewProjection", mvp);
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0), translationA);
+            glm::mat4 mvp = proj * view * model;
+            shader.Bind();
+            shader.setUniformMat4f("u_ModelViewProjection", mvp);
+            renderer.Draw(va, ib, shader);
+        }
 
-        va.Bind();
-        ib.Bind();
-
-        renderer.Draw(va, ib, shader);
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0), translationB);
+            glm::mat4 mvp = proj * view * model;
+            shader.Bind();
+            shader.setUniformMat4f("u_ModelViewProjection", mvp);
+            renderer.Draw(va, ib, shader);
+        }
 
         if (r > 1.0f) {
             increment = -0.05f;
@@ -167,7 +167,8 @@ int main(void) {
 
             ImGui::Begin("Debugging Window");                          // Create a window called "Hello, world!" and append into it.
 
-            ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
             ImGui::Text("counter = %d", counter);
 
