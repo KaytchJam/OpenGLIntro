@@ -32,7 +32,7 @@ int main(void) {
 
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 540, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -66,34 +66,34 @@ int main(void) {
     glEnable(GL_BLEND);
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-    VertexArray va;
-    VertexBuffer vb(positions, 4 * 4 * sizeof(float));
+    //VertexArray va;
+    //VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
-    VertexBufferLayout layout;
-    layout.push<float>(2);
-    layout.push<float>(2);
-    va.addBuffer(vb, layout);
+    //VertexBufferLayout layout;
+    //layout.push<float>(2);
+    //layout.push<float>(2);
+    //va.addBuffer(vb, layout);
 
-    IndexBuffer ib(indices, 6);
+    //IndexBuffer ib(indices, 6);
 
-    // generate orthogonal matrix for projection
-    //                          X DOMAIN      Y DOMAIN      Z DOMAIN
-    // CONVERTS OUR POSITION COORDINATES TO FIT WITHIN THIS DOMAIN
-    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+    //// generate orthogonal matrix for projection
+    ////                          X DOMAIN      Y DOMAIN      Z DOMAIN
+    //// CONVERTS OUR POSITION COORDINATES TO FIT WITHIN THIS DOMAIN
+    //glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+    //glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
 
-    Shader shader("res/shaders/Basic.shader");
-    shader.Bind();
-    shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
+    //Shader shader("res/shaders/Basic.shader");
+    //shader.Bind();
+    //shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
-    Texture texture("res/textures/Data_Heart.png");
-    texture.Bind();
-    shader.setUniform1i("u_Texture", 0);
+    //Texture texture("res/textures/Data_Heart.png");
+    //texture.Bind();
+    //shader.setUniform1i("u_Texture", 0);
 
-    va.UnBind();
-    shader.UnBind();
-    vb.UnBind();
-    ib.UnBind();
+    //va.UnBind();
+    //shader.UnBind();
+    //vb.UnBind();
+    //ib.UnBind();
 
     Renderer renderer;
 
@@ -109,7 +109,7 @@ int main(void) {
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     // IMGUI END
     
-    glm::vec3 translationA(200, 200, 0);
+   /* glm::vec3 translationA(200, 200, 0);
     glm::vec3 translationB(400, 200, 0);
 
     bool show_demo_window = true;
@@ -117,7 +117,7 @@ int main(void) {
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     float r = 0.0f;
-    float increment = 0.05f;
+    float increment = 0.05f;*/
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
@@ -130,56 +130,52 @@ int main(void) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // here
-        //glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-        //glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+        //// Object 1 Rendering
+        //{
+        //    glm::mat4 model = glm::translate(glm::mat4(1.0), translationA);
+        //    glm::mat4 mvp = proj * view * model;
+        //    shader.Bind();
+        //    shader.setUniformMat4f("u_ModelViewProjection", mvp);
+        //    renderer.Draw(va, ib, shader);
+        //}
 
-        // end here
+        //// Object 2 Rendering
+        //{
+        //    glm::mat4 model = glm::translate(glm::mat4(1.0), translationB);
+        //    glm::mat4 mvp = proj * view * model;
+        //    shader.Bind();
+        //    shader.setUniformMat4f("u_ModelViewProjection", mvp);
+        //    renderer.Draw(va, ib, shader);
+        //}
 
-        {
-            glm::mat4 model = glm::translate(glm::mat4(1.0), translationA);
-            glm::mat4 mvp = proj * view * model;
-            shader.Bind();
-            shader.setUniformMat4f("u_ModelViewProjection", mvp);
-            renderer.Draw(va, ib, shader);
-        }
+        //if (r > 1.0f) {
+        //    increment = -0.05f;
+        //} else if (r < 0.0f) {
+        //    increment = 0.05f;
+        //}
 
-        {
-            glm::mat4 model = glm::translate(glm::mat4(1.0), translationB);
-            glm::mat4 mvp = proj * view * model;
-            shader.Bind();
-            shader.setUniformMat4f("u_ModelViewProjection", mvp);
-            renderer.Draw(va, ib, shader);
-        }
+        //r += increment;
 
-        if (r > 1.0f) {
-            increment = -0.05f;
-        } else if (r < 0.0f) {
-            increment = 0.05f;
-        }
+        //// IMGUI STUFF
+        //{
+        //    static float f = 0.0f;
+        //    static int counter = 0;
 
-        r += increment;
+        //    ImGui::Begin("Debugging Window");                          // Create a window called "Hello, world!" and append into it.
 
-        // IMGUI STUFF
-        {
-            static float f = 0.0f;
-            static int counter = 0;
+        //    ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        //    ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
+        //    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+        //    ImGui::Text("counter = %d", counter);
 
-            ImGui::Begin("Debugging Window");                          // Create a window called "Hello, world!" and append into it.
+        //    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        //    ImGui::End();
+        //}
 
-            ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        //ImGui::EndFrame();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        // IMGUI END
+        ////ImGui::EndFrame();
+        //ImGui::Render();
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //// IMGUI END
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
