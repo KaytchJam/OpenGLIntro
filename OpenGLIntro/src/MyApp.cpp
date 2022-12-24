@@ -110,7 +110,12 @@ int main(void) {
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     // IMGUI END
 
-    test::TestClearColor tst;
+    test::Test* currentTest = nullptr;
+    test::TestMenu* tMenu = new test::TestMenu(currentTest);
+    currentTest = tMenu;
+
+    tMenu->registerTest<test::TestClearColor>("Clear Color");
+    //test::TestClearColor tst;
     
    /* glm::vec3 translationA(200, 200, 0);
     glm::vec3 translationB(400, 200, 0);
@@ -128,17 +133,30 @@ int main(void) {
 
         renderer.Clear();
 
-        tst.onUpdate(0.0f);
-        tst.onRender();
+        //tst.onUpdate(0.0f);
+        //tst.onRender();
 
         // generate IMGUI new frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Color Window");
-        tst.onImGuiRender();
-        ImGui::End();
+        if (currentTest) {
+            currentTest->onUpdate(0.0f);
+            currentTest->onRender();
+            ImGui::Begin("Test");
+
+            if (currentTest != tMenu && ImGui::Button("<-")) {
+                delete currentTest;
+                currentTest = tMenu;
+            }
+            currentTest->onImGuiRender();
+            ImGui::End();
+        }
+
+        //ImGui::Begin("Color Window");
+        //tst.onImGuiRender();
+        //ImGui::End();
 
         ImGui::EndFrame();
         ImGui::Render();
@@ -198,6 +216,7 @@ int main(void) {
         glfwPollEvents();
     }
 
+    delete tMenu;
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
