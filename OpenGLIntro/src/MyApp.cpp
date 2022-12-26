@@ -19,6 +19,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "tests/TestClearColor.h"
+#include "tests/TestDrawRect.h"
 
 int main(void) {
     GLFWwindow* window;
@@ -115,6 +116,7 @@ int main(void) {
     currentTest = tMenu;
 
     tMenu->registerTest<test::TestClearColor>("Clear Color");
+    tMenu->registerTest<test::TestDrawRect>("Draw Rect");
     //test::TestClearColor tst;
     
    /* glm::vec3 translationA(200, 200, 0);
@@ -131,6 +133,7 @@ int main(void) {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
+        GLCall(glClearColor(0.0f, 0.f, 0.0f, 1.0f));
         renderer.Clear();
 
         //tst.onUpdate(0.0f);
@@ -216,7 +219,9 @@ int main(void) {
         glfwPollEvents();
     }
 
-    delete tMenu;
+    delete currentTest;
+    if (currentTest != tMenu) delete tMenu;
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
