@@ -1,13 +1,12 @@
 #include "TestDrawRect.h"
 #include "../ErrorManager.h"
 #include "imgui/imgui.h"
+#include <iostream>
 
 namespace test {
-	TestDrawRect::TestDrawRect() : 
-	proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))),
-	translationB(400, 200, 0){
-		float x = 540.0f;
-		float y = 270.0f;
+	TestDrawRect::TestDrawRect() : proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), translationB(glm::vec3(400, 200, 0)) {
+		float x = 100.0f;
+		float y = 200.0f;
 		float length = 200.0f;
 		float height = 150.0f;
 
@@ -29,15 +28,24 @@ namespace test {
 		layout.push<float>(2);
 		layout.push<float>(2);
 
+		std::cout << "VertexBuffer created" << std::endl;
+
 		m_VA->addBuffer(vb, layout);
 
 		m_IB = new IndexBuffer(indices, 6);
-		m_Sh = new Shader("res/shaders/Basic.shader");
+		m_Sh = new Shader("res/shaders/TestBasic.shader");
 		m_Sh->Bind();
 		m_Sh->setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
+
+		m_VA->UnBind();
+		m_Sh->UnBind();
+		vb.UnBind();
+		m_IB->UnBind();
+
 	}
 
 	TestDrawRect::~TestDrawRect() {
+		//std::cout << "Deleting all Buffers" << std::endl;
 		delete m_VA;
 		delete m_IB;
 		delete m_Sh;
@@ -47,6 +55,7 @@ namespace test {
 		glm::mat4 model = glm::translate(glm::mat4(1.0), translationB);
 		glm::mat4 mvp = proj * view * model;
 		m_Sh->Bind();
+		m_Sh->setUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
 		m_Sh->setUniformMat4f("u_ModelViewProjection", mvp);
 	}
 
@@ -59,6 +68,6 @@ namespace test {
 	}
 
 	void TestDrawRect::onImGuiRender() {
-		 ImGui::SliderFloat3("Rectangle Camera", &translationB.x, 0.0f, 960.0f);
+		 ImGui::SliderFloat2("Rectangle Position", &translationB.x, 0.0f, 960.0f);
 	}
 }
