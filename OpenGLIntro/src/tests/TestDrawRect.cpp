@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace test {
-	TestDrawRect::TestDrawRect() : proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), translationB(glm::vec3(400, 200, 0)) {
+	TestDrawRect::TestDrawRect() : proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), translationB(glm::vec3(200, 200, 0)) {
 		float x = 100.0f;
 		float y = 200.0f;
 		float length = 200.0f;
