@@ -27,8 +27,7 @@ namespace test {
 		VertexBuffer* m_VB = nullptr;
 
 		//STACK OBJECTS
-		glm::mat4 proj;
-		glm::mat4 view;
+		glm::mat4 proj, view;
 		glm::vec3 translationB;
 
 	};
