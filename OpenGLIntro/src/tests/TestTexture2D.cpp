@@ -39,7 +39,7 @@ namespace test {
 		m_Sh->Bind();
 		m_Sh->setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
-		m_Tx = new Texture("res/textures.Data_Heart.png");
+		m_Tx = new Texture("res/textures/Data_Heart.png");
 		m_Tx->Bind();
 		m_Sh->setUniform1i("u_Texture", 0);
 
@@ -89,12 +89,10 @@ namespace test {
 			m_Sh->setUniformMat4f("u_ModelViewProjection", mvp);
 			myRenderer.Draw(*m_VA, *m_IB, *m_Sh);
 		}
-
-		//std::cout << "Rendered object 2" << std::endl;
 	}
 
 	void TestTexture2D::onImGuiRender() {
-		ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+		ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 960.0f);
 		ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 960.0f);
 	}
 }
