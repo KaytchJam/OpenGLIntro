@@ -4,6 +4,7 @@
 #include "../IndexBuffer.h"
 #include "../Shader.h"
 #include "../Texture.h"
+#include "../VertexBuffer.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -23,9 +24,12 @@ namespace test {
 		IndexBuffer* m_IB = nullptr;
 		Shader* m_Sh = nullptr;
 		Texture* m_Tx = nullptr;
+		VertexBuffer* m_VB = nullptr;
 
 		// STACK OBJECTS
-		glm::mat4 proj, view;
-		glm::vec3 translationA, translationB;
+		glm::mat4 proj;
+		glm::mat4 view;
+		glm::vec3 translationA;
+		glm::vec3 translationB;
 	};
 }

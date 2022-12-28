@@ -4,7 +4,11 @@
 #include <iostream>
 
 namespace test {
-	TestDrawRect::TestDrawRect() : proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), translationB(glm::vec3(200, 200, 0)) {
+	TestDrawRect::TestDrawRect() : 
+		proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), 
+		view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), 
+		translationB(glm::vec3(200, 200, 0)) 
+	{
 		float x = 100.0f;
 		float y = 200.0f;
 		float length = 200.0f;
@@ -23,14 +27,14 @@ namespace test {
 		};
 
 		m_VA = new VertexArray();
-		VertexBuffer vb(positions, 16 * sizeof(float));
+		m_VB = new VertexBuffer(positions, 16 * sizeof(float));
 		VertexBufferLayout layout;
 		layout.push<float>(2);
 		layout.push<float>(2);
 
-		std::cout << "VertexBuffer created" << std::endl;
+		//std::cout << "VertexBuffer created" << std::endl;
 
-		m_VA->addBuffer(vb, layout);
+		m_VA->addBuffer(*m_VB, layout);
 
 		m_IB = new IndexBuffer(indices, 6);
 		m_Sh = new Shader("res/shaders/TestBasic.shader");
@@ -39,7 +43,7 @@ namespace test {
 
 		m_VA->UnBind();
 		m_Sh->UnBind();
-		vb.UnBind();
+		m_VB->UnBind();
 		m_IB->UnBind();
 
 	}
@@ -49,6 +53,7 @@ namespace test {
 		delete m_VA;
 		delete m_IB;
 		delete m_Sh;
+		delete m_VB;
 	}
 
 	void TestDrawRect::onUpdate(float deltaTime) {

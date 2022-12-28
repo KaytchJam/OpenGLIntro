@@ -24,6 +24,7 @@ namespace test {
 		VertexArray* m_VA = nullptr;
 		IndexBuffer* m_IB = nullptr;
 		Shader* m_Sh = nullptr;
+		VertexBuffer* m_VB = nullptr;
 
 		//STACK OBJECTS
 		glm::mat4 proj;
