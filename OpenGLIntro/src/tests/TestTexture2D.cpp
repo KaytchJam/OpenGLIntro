@@ -79,8 +79,6 @@ namespace test {
 			myRenderer.Draw(*m_VA, *m_IB, *m_Sh);
 		}
 
-		//std::cout << "Rendered object 1" << std::endl;
-
 		// Object 2 Rendering
 		{
 			model = glm::translate(glm::mat4(1.0), translationB);
