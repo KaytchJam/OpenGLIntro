@@ -48,8 +48,6 @@ namespace test {
 		m_VB->UnBind();
 		m_IB->UnBind();
 		m_Tx->UnBind();
-
-		//std::cout << "Out of constructor" << std::endl;
 	}
 
 	TestTexture2D::~TestTexture2D() {
