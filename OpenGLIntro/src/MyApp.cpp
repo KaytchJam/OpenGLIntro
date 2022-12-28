@@ -20,6 +20,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "tests/TestClearColor.h"
 #include "tests/TestDrawRect.h"
+#include "tests/TestTexture2D.h"
 
 int main(void) {
     GLFWwindow* window;
@@ -117,6 +118,7 @@ int main(void) {
 
     tMenu->registerTest<test::TestClearColor>("Clear Color");
     tMenu->registerTest<test::TestDrawRect>("Draw Rect");
+    tMenu->registerTest<test::TestTexture2D>("Draw Texture(s)");
     //test::TestClearColor tst;
     
    /* glm::vec3 translationA(200, 200, 0);

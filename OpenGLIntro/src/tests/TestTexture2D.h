@@ -25,9 +25,7 @@ namespace test {
 		Texture* m_Tx = nullptr;
 
 		// STACK OBJECTS
-		glm::mat4 proj;
-		glm::mat4 view;
-		glm::vec3 translationA;
-		glm::vec3 translationB;
+		glm::mat4 proj, view;
+		glm::vec3 translationA, translationB;
 	};
 }
