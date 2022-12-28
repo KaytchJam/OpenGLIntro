@@ -11,6 +11,5 @@ namespace test {
 		void onRender();
 		void onImGuiRender();
 	private:
-		float m_ClearColor[4]; // RBGA
 	};
 }
