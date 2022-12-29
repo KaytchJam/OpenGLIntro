@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <functional>
 
 namespace segdisp {
 
@@ -15,7 +16,7 @@ namespace segdisp {
 			char debug_segment_char;	// What character is this segment denoted by? { A - G }
 		} seg_sig_t;
 
-		const seg_sig_t SEG_SIGS[7] = {
+		seg_sig_t SEG_SIGS[7] = {
 			{false, 'A'},
 			{false, 'B'},
 			{false, 'C'},
@@ -30,6 +31,8 @@ namespace segdisp {
 		~SegmentedDisplay();
 		void setMappings(uint8_t digit);
 		static uint8_t getBinaryMapping(uint8_t& digit);
-		static std::string mappingToString(uint8_t& binaryMapping);
+		std::string mappingToString(uint8_t binaryMapping);
+	private:
+		static void consumeBinaryMapping(uint8_t binaryMapping, std::function<void(bool)>);
 	};
 }
