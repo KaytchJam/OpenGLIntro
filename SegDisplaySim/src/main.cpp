@@ -12,10 +12,10 @@ int main(void) {
 
 	segdisp::SegmentedDisplay seg;
 
-	uint8_t digit = 1;
+	uint8_t digit = 2;
 	bool on = true;
 	uint8_t mapping = seg.getBinaryMapping(digit);
-	std::cout << seg.mappingToString(mapping) << std::endl;
+	std::cout << "Mappings for " << (int) digit << ": " << seg.mappingToString(mapping) << std::endl;
 		
 
 	// renderScreen

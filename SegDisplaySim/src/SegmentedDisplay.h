@@ -12,7 +12,7 @@ namespace segdisp {
 	class SegmentedDisplay {
 	private:
 		typedef struct segmentSignals {
-			bool light_on;	// Is this segment on or off?
+			bool light_on;				// Is this segment on or off?
 			char debug_segment_char;	// What character is this segment denoted by? { A - G }
 		} seg_sig_t;
 
