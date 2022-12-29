@@ -2,9 +2,15 @@
 #include <string>
 
 namespace segdisp {
+
+	struct signalMappingHub {
+		uint8_t binaryMapping;
+		char stringMapping[7];
+	};
+
 	class SegmentedDisplay {
 	private:
-		typedef struct segment_signals {
+		typedef struct segmentSignals {
 			bool light_on;	// Is this segment on or off?
 			char debug_segment_char;	// What character is this segment denoted by? { A - G }
 		} seg_sig_t;
@@ -23,7 +29,7 @@ namespace segdisp {
 		SegmentedDisplay();
 		~SegmentedDisplay();
 		void setMappings(uint8_t digit);
-		static uint8_t getMapping(uint8_t& digit);
-		static std::string mappingToString(uint8_t& mapping);
+		static uint8_t getBinaryMapping(uint8_t& digit);
+		static std::string mappingToString(uint8_t& binaryMapping);
 	};
 }
