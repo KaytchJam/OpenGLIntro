@@ -9,10 +9,15 @@ namespace segdisp {
 			char debug_segment_char;	// What character is this segment denoted by? { A - G }
 		} seg_sig_t;
 
-		const seg_sig_t SEG_SIGS[7];
-
-	private:
-		void initializeSegSigs();
+		const seg_sig_t SEG_SIGS[7] = {
+			{false, 'A'},
+			{false, 'B'},
+			{false, 'C'},
+			{false, 'D'},
+			{false, 'E'},
+			{false, 'F'},
+			{false, 'G'}
+		};
 
 	public:
 		SegmentedDisplay();

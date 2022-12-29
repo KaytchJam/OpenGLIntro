@@ -18,12 +18,15 @@ const int8_t mappings[10] = {
 };
 
 namespace segdisp {
-
 	SegmentedDisplay::SegmentedDisplay() {
 
 	}
 
 	SegmentedDisplay::~SegmentedDisplay() {
+
+	}
+
+	void SegmentedDisplay::setMappings(uint8_t digit) {
 
 	}
 
