@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "SegmentedDisplay.h"
 
 int main(void) {
 	std::cout << "Hello world" << std::endl;
@@ -14,7 +14,7 @@ int main(void) {
 
 	uint8_t digit = 0;
 	bool on = true;
-	int mapping = seg.getMapping(digit, on);
+	uint8_t mapping = seg.getMapping(digit);
 	std::cout << seg.mappingToString(mapping);
 		
 
