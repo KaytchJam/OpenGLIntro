@@ -18,6 +18,7 @@ const int8_t mappings[10] = {
 };
 
 namespace segdisp {
+
 	SegmentedDisplay::SegmentedDisplay() {
 
 	}

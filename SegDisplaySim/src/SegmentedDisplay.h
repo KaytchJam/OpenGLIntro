@@ -9,12 +9,16 @@ namespace segdisp {
 			char debug_segment_char;	// What character is this segment denoted by? { A - G }
 		} seg_sig_t;
 
-		const seg_sig_t* SEG_SIGS[7];
+		const seg_sig_t SEG_SIGS[7];
+
+	private:
+		void initializeSegSigs();
 
 	public:
 		SegmentedDisplay();
 		~SegmentedDisplay();
-		uint8_t getMapping(uint8_t& digit);
-		std::string mappingToString(uint8_t& mapping);
+		void setMappings(uint8_t digit);
+		static uint8_t getMapping(uint8_t& digit);
+		static std::string mappingToString(uint8_t& mapping);
 	};
 }
