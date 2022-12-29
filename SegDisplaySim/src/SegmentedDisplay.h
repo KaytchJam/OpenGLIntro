@@ -33,6 +33,6 @@ namespace segdisp {
 		static uint8_t getBinaryMapping(uint8_t& digit);
 		std::string mappingToString(uint8_t binaryMapping);
 	private:
-		static void consumeBinaryMapping(uint8_t binaryMapping, std::function<void(bool)>);
+		static void consumeBinaryMapping(uint8_t binaryMapping, std::function<void(bool, int)>);
 	};
 }
