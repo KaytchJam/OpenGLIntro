@@ -22,7 +22,7 @@ int main()
 	const int PROJECT_HEIGHT = 720;
 
 	// create window object
-	GLFWwindow* window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
 
 	// check for proper window creation
 	if (window == NULL) 
@@ -31,6 +31,7 @@ int main()
 		glfwTerminate();
 		return -1;
 	}
+	glfwMakeContextCurrent(window);
 
 	// check for proper GLAD initialization
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
