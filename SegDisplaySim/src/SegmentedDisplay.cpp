@@ -23,16 +23,19 @@ namespace segdisp {
 
 	SegmentedDisplay::~SegmentedDisplay() {}
 
-	void SegmentedDisplay::setMappings(uint8_t digit) {
+	void SegmentedDisplay::setMappings(uint8_t digit) 
+	{
 		seg_sig_t* ref = SEG_SIGS;
 		consumeBinaryMapping(getBinaryMapping(digit), [&](bool sig_state, int count) -> void { ref[count].debug_segment_char = sig_state; });
 	}
 
-	uint8_t SegmentedDisplay::getBinaryMapping(uint8_t& digit) {
+	uint8_t SegmentedDisplay::getBinaryMapping(uint8_t& digit)
+	{
 		return b_mappings[digit];
 	}
 
-	std::string SegmentedDisplay::mappingToString(uint8_t binaryMapping) {
+	std::string SegmentedDisplay::mappingToString(uint8_t binaryMapping)
+	{
 		std::string stringMapping;
 		auto& ref = SEG_SIGS;
 		uint8_t index = 0;
@@ -45,7 +48,8 @@ namespace segdisp {
 		return stringMapping;
 	}
 
-	void SegmentedDisplay::consumeBinaryMapping(uint8_t binaryMapping, std::function<void(bool, int)> some_func) {
+	void SegmentedDisplay::consumeBinaryMapping(uint8_t binaryMapping, std::function<void(bool, int)> some_func) 
+	{
 		uint8_t lsb_mask = 0x1;
 		int count = 0;
 
