@@ -3,6 +3,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+void processInput(GLFWwindow* window) 
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+		std::cout << "Window was closed using escape key" << std::endl;
+	}
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -46,6 +55,7 @@ int main()
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
+		processInput(window); // handle user input
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 	}
