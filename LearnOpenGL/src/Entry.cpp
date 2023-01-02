@@ -61,6 +61,23 @@ int main()
 		 0.0f,  0.5f, 0.0f
 	};
 
+	unsigned int vertexBufferObj;
+	glGenBuffers(1, &vertexBufferObj); // object creation, store id in our unsigned int
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// writing shader code
+	const char *vertexShaderSource = "#version 330 core\n"
+		"layout (location = 0) in vec3 aPos;\n"
+		"void main()\n"
+		"{\n"
+		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+		"}\0";
+
+	unsigned int vertexShaderObject;
+	vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL);
+
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
