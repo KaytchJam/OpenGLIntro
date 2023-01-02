@@ -52,10 +52,16 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	const float RGB_CEIL = 255;
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
+
+		// RENDER COMMANDS ...
+		glClearColor(0xFF / RGB_CEIL, 0xC0 / RGB_CEIL, 0xCB / RGB_CEIL, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 	}
