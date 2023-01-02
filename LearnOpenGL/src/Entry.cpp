@@ -12,7 +12,7 @@ void processInput(GLFWwindow* window)
 	}
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
@@ -53,13 +53,21 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	const float RGB_CEIL = 255;
+
+	// vertices of our triangle
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
+	};
+
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
 
 		// RENDER COMMANDS ...
-		glClearColor(0xFF / RGB_CEIL, 0xC0 / RGB_CEIL, 0xCB / RGB_CEIL, 1.0f);
+		glClearColor(0xFF / RGB_CEIL, 0x14 / RGB_CEIL, 0x93 / RGB_CEIL, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glfwSwapBuffers(window);
