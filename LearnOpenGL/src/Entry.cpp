@@ -74,9 +74,32 @@ int main()
 		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 		"}\0";
 
+	const char* fragmentShaderSource = "#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"void main()\n"
+		"{\n"
+		"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+		"}\0";
+
 	unsigned int vertexShaderObject;
 	vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL);
+	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL); // binding our shader source to our vertex object
+	glCompileShader(vertexShaderObject); // compile our shader
+
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShaderObject, GL_COMPILE_STATUS, &success);
+
+	unsigned int fragmentShaderObject;
+	fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderObject, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShaderObject); // compile our shader
+
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShaderObject, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
