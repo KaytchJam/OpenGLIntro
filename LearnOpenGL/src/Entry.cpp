@@ -108,6 +108,13 @@ int main()
 		"    FragColor = vec4(colour, 1.0);\n"
 		"}\0";
 
+	const char* yellowFragmentShaderSource = "#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"void main()\n"
+		"{\n"
+		"    FragColor = vec4(1.0, 1.0, 0.0, 0.0);\n"
+		"}\0";
+
 	unsigned int vertexShaderObject;
 	vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL); // binding our shader source to our vertex object
@@ -146,7 +153,7 @@ int main()
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
-	objectIds ids = exercise2();
+	objectIds ids = exercise3();
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
@@ -378,5 +385,10 @@ objectIds exercise2()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return { VAOS[0], VAOS[1], VBOS[0], VBOS[1], VBOS[2]};
+}
 
+objectIds exercise3() 
+{
+	std::cout << "EXERCISE 3: Draw both triangles again but eahc program uses a different fragment shader" << std::endl;
+	return {};
 }
