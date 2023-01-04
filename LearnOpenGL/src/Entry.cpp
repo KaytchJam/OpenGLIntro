@@ -27,13 +27,13 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-int main() 
+int main()
 {
 
 	glfwInit(); // initialize glfw
 
 	// setting window options
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -41,10 +41,10 @@ int main()
 	const int PROJECT_HEIGHT = 720;
 
 	// create window object
-	GLFWwindow *window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
 
 	// check for proper window creation
-	if (window == NULL) 
+	if (window == NULL)
 	{
 		std::cout << "Window creation failed." << std::endl;
 		glfwTerminate();
@@ -62,26 +62,8 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	const float RGB_CEIL = 255;
-
-	// vertices of our triangle
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
-
-	unsigned int vertexArrayObj;
-	glGenVertexArrays(1, &vertexArrayObj); // vertex array object creation
-	glBindVertexArray(vertexArrayObj);
-
-	unsigned int vertexBufferObj;
-	glGenBuffers(1, &vertexBufferObj); // object creation, store id in our unsigned int
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 	// writing shader code
-	const char *vertexShaderSource = "#version 330 core\n"
+	const char* vertexShaderSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
 		"void main()\n"
 		"{\n"
@@ -129,9 +111,50 @@ int main()
 	glDeleteShader(vertexShaderObject);
 	glDeleteShader(fragmentShaderObject);
 
+
+	const float RGB_CEIL = 255;
+
+	// vertices of our triangle
+	/*
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
+	};*/
+
+	float square_vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.5f,  0.5f, 0.0f,
+		-0.5f,  0.5f, 0.0f
+	};
+
+	unsigned int indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	unsigned int vertexArrayObj, vertexBufferObj, elementBufferObj;
+	glGenVertexArrays(1, &vertexArrayObj); // vertex array object creation
+	glGenBuffers(1, &vertexBufferObj); // object creation, store id in our unsigned int
+	glGenBuffers(1, &elementBufferObj);
+
+	glBindVertexArray(vertexArrayObj); // we bind our vertex array prior to binding any vertex buffers
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObj);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
 	// specify how our vertex data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
 	// the above settings are associated with our currently bound vertex buffer object
 
 	// the render loop
@@ -145,11 +168,17 @@ int main()
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vertexArrayObj);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObj);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 	}
+
+	glDeleteVertexArrays(1, &vertexArrayObj);
+	glDeleteBuffers(1, &vertexBufferObj);
+	glDeleteProgram(shaderProgram);
+
 
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
