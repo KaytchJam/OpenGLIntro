@@ -3,6 +3,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+struct basicVector3
+{
+	float x, y, z;
+};
+
 
 void errorCheck(int success, unsigned int vso, char* infoLog) 
 {
@@ -129,6 +134,14 @@ int main()
 		-0.5f,  0.5f, 0.0f
 	};
 
+	// testing the use of a vector struct instead of just a raw array
+	basicVector3 s_vertices[] = {
+		{-0.5f, -0.5f, 0.0f},
+		{0.5f, -0.5f, 0.0f},
+		{0.5f, 0.5f, 0.0f},
+		{-0.5f, 0.5f, 0.0f}
+	};
+
 	unsigned int indices[] = {
 		0, 1, 2,
 		2, 3, 0
@@ -142,7 +155,7 @@ int main()
 	glBindVertexArray(vertexArrayObj); // we bind our vertex array prior to binding any vertex buffers
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(s_vertices), s_vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObj);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
