@@ -12,7 +12,7 @@ struct basicVector3
 // just to make doing these exercises easier, returning a struct of all our object ids from each exercise
 struct objectIds 
 {
-	unsigned int vao, vbo1, vbo2, ebo;
+	unsigned int vao1, vao2, vbo1, vbo2, ebo;
 };
 
 objectIds rainbowPentagon();
@@ -165,23 +165,23 @@ int main()
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);*/
 
 		// EXERCISE ONE
-		glBindVertexArray(ids.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glBindVertexArray(ids.vao1);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		// EXERCISE TWO
+		glBindVertexArray(ids.vao1);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(ids.vao2);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 	}
 
 	// deleting to avoid memory leaks
-	glDeleteVertexArrays(1, &ids.vao);
-	glDeleteBuffers(1, &ids.vbo1);
-	glDeleteBuffers(1, &ids.vbo2);
-	glDeleteBuffers(1, &ids.ebo);
-
-	/*glDeleteVertexArrays(1, &vertexArrayObj);
-	glDeleteBuffers(1, &vbo_points);
-	glDeleteBuffers(1, &vbo_colors);
-	glDeleteBuffers(1, &elementBufferObj);*/
+	glDeleteVertexArrays(2, &ids.vao1);
+	glDeleteBuffers(3, &ids.vbo1);
 	glDeleteProgram(shaderProgram);
 
 
@@ -189,7 +189,10 @@ int main()
 	return 0;
 }
 
-objectIds rainbowPentagon() {
+objectIds rainbowPentagon() 
+{
+	std::cout << "PLAYGROUND: Creating a rainbow colored pentagon" << std::endl;
+
 	basicVector3 top = { 0.0f, 0.7f, 0.0f };
 	basicVector3 mLeft = { -0.5f, 0.145f, 0.0f };
 	basicVector3 bLeft = { -0.25f, -0.5f, 0.0f };
@@ -212,11 +215,8 @@ objectIds rainbowPentagon() {
 	};
 
 	basicVector3 colors[] = {
-		red,
-		green,
-		blue,
-		red,
-		green
+		red, green, blue,
+		red, green
 	};
 
 	unsigned int indices[] = {
@@ -261,11 +261,13 @@ objectIds rainbowPentagon() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return { vertexArrayObj, vbo_points, vbo_colors, elementBufferObj };
+	return { vertexArrayObj, 0, vbo_points, vbo_colors, elementBufferObj };
 }
 
 // draw two triangles right next to each other
-objectIds exercise1() {
+objectIds exercise1() 
+{
+	std::cout << "EXERCISE ONE: Create two different triangles using one vertexbuffer" << std::endl;
 
 	basicVector3 red = { 1.0f, 0.0f, 0.0f }; // red
 	basicVector3 green = { 0.0f, 1.0f, 0.0f };
@@ -305,5 +307,66 @@ objectIds exercise1() {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return {vao, vbo_points, vbo_colors, 0};
+	return {vao, 0, vbo_points, vbo_colors, 0};
+}
+
+objectIds exercise2() 
+{
+	std::cout << "EXERCISE TWO: Create two triangles using two seperate vertex arrays (and buffers)" << std::endl;
+
+	basicVector3 red = { 1.0f, 0.0f, 0.0f };
+	basicVector3 green = { 0.0f, 1.0f, 0.0f };
+	basicVector3 blue = { 0.0f, 0.0f, 1.0f };
+
+	basicVector3 points1[] = {
+		{-0.5f, 0.0f, 0.0f}, // left triangle top
+		{-0.75f, -0.5f, 0.0f}, // left triangle left
+		{-0.25f, -0.5f, 0.0f} // left triangle right
+	};
+
+	basicVector3 points2[] = {
+		{0.5f, 0.5f, 0.0f}, // right triangle top
+		{0.25f, 0.0f, 0.0f}, // right triangle left
+		{0.75, 0.0f, 0.0f} // right triangle right
+	};
+
+	basicVector3 colors[] = {
+		red, green, blue
+	};
+
+	// left vaos[0] be the left triangle, vaos[1] be the right
+	// vbos[2] is our left tri vertex buffer, vbos[3] right buffer
+	unsigned int vaos_vbos[5] = { 0, 0, 0, 0, 0};
+	glGenVertexArrays(2, vaos_vbos); // generate vertex arrays in the array
+	glGenBuffers(3, &vaos_vbos[2]); // generate vertex buffers in the array
+
+	glBindVertexArray(vaos_vbos[0]); // left triangle
+	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points1), points1, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[4]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(vaos_vbos[1]); // right triangle
+	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points2), points2, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[4]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return { vaos_vbos[0], vaos_vbos[1], vaos_vbos[2], vaos_vbos[3], vaos_vbos[4] };
+
 }
