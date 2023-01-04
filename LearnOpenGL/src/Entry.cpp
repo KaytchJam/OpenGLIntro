@@ -135,22 +135,32 @@ int main()
 		-0.5f,  0.5f, 0.0f
 	};*/
 
-	basicVector3 bottomLeft = { -0.5f, -0.5f, 0.0f };
+	/*basicVector3 bottomLeft = { -0.5f, -0.5f, 0.0f };
 	basicVector3 bottomRight = { 0.5f, -0.5f, 0.0f };
 	basicVector3 topRight = { 0.5f, 0.5f, 0.0f };
 	basicVector3 topLeft = { -0.5f, 0.5f, 0.0f };
+	*/
+
+	basicVector3 top = {0.0f, 0.5f, 0.0f};
+	basicVector3 mLeft = {-0.5f, 0.0f, 0.0f};
+	basicVector3 bLeft = {-0.25f, -0.5f, 0.0f};
+	basicVector3 bRight = {0.25f, -0.5f, 0.0f};
+	basicVector3 mRight = {0.5f, 0.0f, 0.0f};
 
 	// testing the use of a vector struct instead of just a raw array
+	// drawing a pentagon
 	basicVector3 s_vertices[] = {
-		bottomLeft,
-		bottomRight,
-		topRight,
-		topLeft
+		top,
+		mLeft,
+		bLeft,
+		bRight,
+		mRight
 	};
 
 	unsigned int indices[] = {
 		0, 1, 2,
-		2, 3, 0
+		2, 3, 0,
+		0, 3, 4
 	};
 
 	unsigned int vertexArrayObj, vertexBufferObj, elementBufferObj;
@@ -170,7 +180,8 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glBindVertexArray(0);
+	// unbind all
+	glBindVertexArray(0); // be sure to unbind the vertex array first (to preserve all bound states)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -189,7 +200,8 @@ int main()
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vertexArrayObj);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
