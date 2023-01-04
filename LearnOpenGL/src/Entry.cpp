@@ -20,6 +20,16 @@ objectIds exercise1();
 objectIds exercise2();
 objectIds exercise3();
 
+void allErrorsFound() {
+
+	GLenum current_error = glGetError();
+	while (current_error)
+	{
+		std::cout << "Error (" << current_error << ") found." << std::endl;
+		current_error = glGetError();
+	}
+}
+
 
 void errorCheck(int success, unsigned int vso, char* infoLog) 
 {
@@ -136,7 +146,7 @@ int main()
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
-	objectIds ids = exercise1();
+	objectIds ids = exercise2();
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
@@ -334,30 +344,30 @@ objectIds exercise2()
 		red, green, blue
 	};
 
+	unsigned int VBOS[3], VAOS[2];
 	// left vaos[0] be the left triangle, vaos[1] be the right
 	// vbos[2] is our left tri vertex buffer, vbos[3] right buffer
-	unsigned int vaos_vbos[5] = { 0, 0, 0, 0, 0};
-	glGenVertexArrays(2, vaos_vbos); // generate vertex arrays in the array
-	glGenBuffers(3, &vaos_vbos[2]); // generate vertex buffers in the array
+	glGenVertexArrays(2, VAOS); // generate vertex arrays in the array
+	glGenBuffers(3, VBOS); // generate vertex buffers in the array
 
-	glBindVertexArray(vaos_vbos[0]); // left triangle
-	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[2]);
+	glBindVertexArray(VAOS[0]); // left triangle
+	glBindBuffer(GL_ARRAY_BUFFER, VBOS[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(points1), points1, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[4]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOS[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
-	glBindVertexArray(vaos_vbos[1]); // right triangle
-	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[3]);
+	glBindVertexArray(VAOS[1]); // right triangle
+	glBindBuffer(GL_ARRAY_BUFFER, VBOS[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(points2), points2, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vaos_vbos[4]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOS[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 
@@ -367,6 +377,6 @@ objectIds exercise2()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return { vaos_vbos[0], vaos_vbos[1], vaos_vbos[2], vaos_vbos[3], vaos_vbos[4] };
+	return { VAOS[0], VAOS[1], VBOS[0], VBOS[1], VBOS[2]};
 
 }
