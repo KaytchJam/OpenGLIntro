@@ -3,6 +3,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
+void errorCheck(int success, unsigned int vso, char* infoLog) 
+{
+	if (!success)
+	{
+		glGetShaderInfoLog(vso, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+}
+
 void processInput(GLFWwindow* window) 
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -61,6 +71,10 @@ int main()
 		 0.0f,  0.5f, 0.0f
 	};
 
+	unsigned int vertexArrayObj;
+	glGenVertexArrays(1, &vertexArrayObj); // vertex array object creation
+	glBindVertexArray(vertexArrayObj);
+
 	unsigned int vertexBufferObj;
 	glGenBuffers(1, &vertexBufferObj); // object creation, store id in our unsigned int
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
@@ -86,20 +100,39 @@ int main()
 	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL); // binding our shader source to our vertex object
 	glCompileShader(vertexShaderObject); // compile our shader
 
+	// check for errors
 	int success;
 	char infoLog[512];
 	glGetShaderiv(vertexShaderObject, GL_COMPILE_STATUS, &success);
+	errorCheck(success, vertexShaderObject, infoLog);
 
 	unsigned int fragmentShaderObject;
 	fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShaderObject, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShaderObject); // compile our shader
 
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShaderObject, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
+	// create a program object that we'll link our two compiled shaders to
+	unsigned int shaderProgram;
+	shaderProgram = glCreateProgram();
+
+	glAttachShader(shaderProgram, vertexShaderObject);
+	glAttachShader(shaderProgram, fragmentShaderObject);
+	glLinkProgram(shaderProgram); // links all our attached shaders within the program
+
+	// check for errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	errorCheck(success, shaderProgram, infoLog);
+
+	// finally, we use the program
+	glUseProgram(shaderProgram);
+	// once our shaders have been linked to the program object, we can delete them
+	glDeleteShader(vertexShaderObject);
+	glDeleteShader(fragmentShaderObject);
+
+	// specify how our vertex data should be interpreted
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// the above settings are associated with our currently bound vertex buffer object
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -109,6 +142,10 @@ int main()
 		// RENDER COMMANDS ...
 		glClearColor(0xFF / RGB_CEIL, 0x14 / RGB_CEIL, 0x93 / RGB_CEIL, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram);
+		glBindVertexArray(vertexArrayObj);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
