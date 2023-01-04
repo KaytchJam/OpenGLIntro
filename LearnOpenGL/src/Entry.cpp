@@ -141,7 +141,7 @@ int main()
 	basicVector3 topLeft = { -0.5f, 0.5f, 0.0f };
 	*/
 
-	basicVector3 top = {0.0f, 0.5f, 0.0f};
+	basicVector3 top = {0.0f, 0.7f, 0.0f};
 	basicVector3 mLeft = {-0.5f, 0.145f, 0.0f};
 	basicVector3 bLeft = {-0.25f, -0.5f, 0.0f};
 	basicVector3 bRight = {0.25f, -0.5f, 0.0f};
@@ -185,7 +185,7 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	
 	// the above settings are associated with our currently bound vertex buffer object
 
