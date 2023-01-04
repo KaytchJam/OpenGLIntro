@@ -142,10 +142,10 @@ int main()
 	*/
 
 	basicVector3 top = {0.0f, 0.5f, 0.0f};
-	basicVector3 mLeft = {-0.5f, 0.0f, 0.0f};
+	basicVector3 mLeft = {-0.5f, 0.145f, 0.0f};
 	basicVector3 bLeft = {-0.25f, -0.5f, 0.0f};
 	basicVector3 bRight = {0.25f, -0.5f, 0.0f};
-	basicVector3 mRight = {0.5f, 0.0f, 0.0f};
+	basicVector3 mRight = {0.5f, 0.145f, 0.0f};
 
 	// testing the use of a vector struct instead of just a raw array
 	// drawing a pentagon
