@@ -135,8 +135,8 @@ int main()
 
 	const float RGB_CEIL = 255;
 
-	objectIds ids = rainbowPentagon();
-	//objectIds ids = exercise1();
+	//objectIds ids = rainbowPentagon();
+	objectIds ids = exercise1();
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
@@ -157,16 +157,16 @@ int main()
 		glUseProgram(shaderProgram);
 
 		// DRAW PENTAGON 
-		glBindVertexArray(ids.vao);
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(ids.vao);
+		//glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 		// DRAW PENTAGON, ORIGINAL
 		/*glBindVertexArray(vertexArrayObj);
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);*/
 
 		// EXERCISE ONE
-		//glBindVertexArray(ids.vao);
-		//glDrawArrays(GL_TRIANGLES, 0, 2);
+		glBindVertexArray(ids.vao);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -292,9 +292,11 @@ objectIds exercise1() {
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, sizeof(basicVector3), NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 
 	glEnableVertexAttribArray(0);
