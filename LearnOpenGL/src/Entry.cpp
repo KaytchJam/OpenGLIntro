@@ -176,8 +176,10 @@ int main()
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 	}
 
+	// deleting to avoid memory leaks
 	glDeleteVertexArrays(1, &vertexArrayObj);
 	glDeleteBuffers(1, &vertexBufferObj);
+	glDeleteBuffers(1, &elementBufferObj);
 	glDeleteProgram(shaderProgram);
 
 
