@@ -70,16 +70,20 @@ int main()
 	// writing shader code
 	const char* vertexShaderSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
+		"layout (location = 1) in vec3 aColor;\n"
+		"out vec3 colour;\n"
 		"void main()\n"
 		"{\n"
+		"   colour = aColor;\n"
 		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 		"}\0";
 
 	const char* fragmentShaderSource = "#version 330 core\n"
+		"in vec3 colour;\n"
 		"out vec4 FragColor;\n"
 		"void main()\n"
 		"{\n"
-		"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+		"    FragColor = vec4(colour, 1.0);\n"
 		"}\0";
 
 	unsigned int vertexShaderObject;
@@ -147,6 +151,11 @@ int main()
 	basicVector3 bRight = {0.25f, -0.5f, 0.0f};
 	basicVector3 mRight = {0.5f, 0.145f, 0.0f};
 
+	// RGB - red, green, blue
+	basicVector3 red = { 1.0f, 0.0f, 0.0f };
+	basicVector3 green = { 0.0f, 1.0f, 0.0f };
+	basicVector3 blue = { 0.0f, 0.0f, 1.0f };
+
 	// testing the use of a vector struct instead of just a raw array
 	// drawing a pentagon
 	basicVector3 s_vertices[] = {
@@ -157,28 +166,51 @@ int main()
 		mRight
 	};
 
+	basicVector3 colors[] = {
+		red,
+		green,
+		blue,
+		red,
+		green
+	};
+
 	unsigned int indices[] = {
 		0, 1, 2,
 		2, 3, 0,
 		0, 3, 4
 	};
 
-	unsigned int vertexArrayObj, vertexBufferObj, elementBufferObj;
+	unsigned int vertexArrayObj, vbo_points, vbo_colors, elementBufferObj;
 	glGenVertexArrays(1, &vertexArrayObj); // vertex array object creation
-	glGenBuffers(1, &vertexBufferObj); // object creation, store id in our unsigned int
+	glGenBuffers(1, &vbo_points); // object creation, store id in our unsigned int
 	glGenBuffers(1, &elementBufferObj);
+	glGenBuffers(1, &vbo_colors);
 
 	glBindVertexArray(vertexArrayObj); // we bind our vertex array prior to binding any vertex buffers
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
+	// bind all our buffers
+	// point buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(s_vertices), s_vertices, GL_STATIC_DRAW);
+	// index buffer (elements)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObj);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// colors buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+
 
 
 	// specify how our vertex data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+
+	// enable vertex buffers at index 0 and index 1
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	// unbind all
 	glBindVertexArray(0); // be sure to unbind the vertex array first (to preserve all bound states)
@@ -209,7 +241,8 @@ int main()
 
 	// deleting to avoid memory leaks
 	glDeleteVertexArrays(1, &vertexArrayObj);
-	glDeleteBuffers(1, &vertexBufferObj);
+	glDeleteBuffers(1, &vbo_points);
+	glDeleteBuffers(1, &vbo_colors);
 	glDeleteBuffers(1, &elementBufferObj);
 	glDeleteProgram(shaderProgram);
 
