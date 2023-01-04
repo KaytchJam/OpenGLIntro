@@ -127,19 +127,25 @@ int main()
 		 0.0f,  0.5f, 0.0f
 	};*/
 
-	float square_vertices[] = {
+	
+	/*float square_vertices[] = {
 		-0.5f, -0.5f, 0.0f,
 		 0.5f, -0.5f, 0.0f,
 		 0.5f,  0.5f, 0.0f,
 		-0.5f,  0.5f, 0.0f
-	};
+	};*/
+
+	basicVector3 bottomLeft = { -0.5f, -0.5f, 0.0f };
+	basicVector3 bottomRight = { 0.5f, -0.5f, 0.0f };
+	basicVector3 topRight = { 0.5f, 0.5f, 0.0f };
+	basicVector3 topLeft = { -0.5f, 0.5f, 0.0f };
 
 	// testing the use of a vector struct instead of just a raw array
 	basicVector3 s_vertices[] = {
-		{-0.5f, -0.5f, 0.0f},
-		{0.5f, -0.5f, 0.0f},
-		{0.5f, 0.5f, 0.0f},
-		{-0.5f, 0.5f, 0.0f}
+		bottomLeft,
+		bottomRight,
+		topRight,
+		topLeft
 	};
 
 	unsigned int indices[] = {
