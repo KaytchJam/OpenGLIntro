@@ -154,6 +154,8 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
 	// the above settings are associated with our currently bound vertex buffer object
 
@@ -163,7 +165,7 @@ int main()
 		processInput(window); // handle user input
 
 		// RENDER COMMANDS ...
-		glClearColor(0xFF / RGB_CEIL, 0x14 / RGB_CEIL, 0x93 / RGB_CEIL, 1.0f);
+		glClearColor(0x2D / RGB_CEIL, 0x19 / RGB_CEIL, 0x32 / RGB_CEIL, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
