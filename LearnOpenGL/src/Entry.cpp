@@ -3,10 +3,22 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+// basic vector struct for storing x, y, and z values
 struct basicVector3
 {
 	float x, y, z;
 };
+
+// just to make doing these exercises easier, returning a struct of all our object ids from each exercise
+struct objectIds 
+{
+	unsigned int vao, vbo1, vbo2, ebo;
+};
+
+objectIds rainbowPentagon();
+objectIds exercise1();
+objectIds exercise2();
+objectIds exercise3();
 
 
 void errorCheck(int success, unsigned int vso, char* infoLog) 
@@ -123,33 +135,66 @@ int main()
 
 	const float RGB_CEIL = 255;
 
-	// vertices of our triangle
-	/*
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};*/
+	objectIds ids = rainbowPentagon();
+	//objectIds ids = exercise1();
 
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	glEnable(GL_CULL_FACE); 
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	
-	/*float square_vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
-	};*/
+	// the above settings are associated with our currently bound vertex buffer object
 
-	/*basicVector3 bottomLeft = { -0.5f, -0.5f, 0.0f };
-	basicVector3 bottomRight = { 0.5f, -0.5f, 0.0f };
-	basicVector3 topRight = { 0.5f, 0.5f, 0.0f };
-	basicVector3 topLeft = { -0.5f, 0.5f, 0.0f };
-	*/
+	// the render loop
+	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
+	{
+		processInput(window); // handle user input
 
-	basicVector3 top = {0.0f, 0.7f, 0.0f};
-	basicVector3 mLeft = {-0.5f, 0.145f, 0.0f};
-	basicVector3 bLeft = {-0.25f, -0.5f, 0.0f};
-	basicVector3 bRight = {0.25f, -0.5f, 0.0f};
-	basicVector3 mRight = {0.5f, 0.145f, 0.0f};
+		// RENDER COMMANDS ...
+		glClearColor(0x2D / RGB_CEIL, 0x19 / RGB_CEIL, 0x32 / RGB_CEIL, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram);
+
+		// DRAW PENTAGON 
+		glBindVertexArray(ids.vao);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+
+		// DRAW PENTAGON, ORIGINAL
+		/*glBindVertexArray(vertexArrayObj);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);*/
+
+		// EXERCISE ONE
+		//glBindVertexArray(ids.vao);
+		//glDrawArrays(GL_TRIANGLES, 0, 2);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
+	}
+
+	// deleting to avoid memory leaks
+	glDeleteVertexArrays(1, &ids.vao);
+	glDeleteBuffers(1, &ids.vbo1);
+	glDeleteBuffers(1, &ids.vbo2);
+	glDeleteBuffers(1, &ids.ebo);
+
+	/*glDeleteVertexArrays(1, &vertexArrayObj);
+	glDeleteBuffers(1, &vbo_points);
+	glDeleteBuffers(1, &vbo_colors);
+	glDeleteBuffers(1, &elementBufferObj);*/
+	glDeleteProgram(shaderProgram);
+
+
+	glfwTerminate(); // clean all of glfw's allocated resources
+	return 0;
+}
+
+objectIds rainbowPentagon() {
+	basicVector3 top = { 0.0f, 0.7f, 0.0f };
+	basicVector3 mLeft = { -0.5f, 0.145f, 0.0f };
+	basicVector3 bLeft = { -0.25f, -0.5f, 0.0f };
+	basicVector3 bRight = { 0.25f, -0.5f, 0.0f };
+	basicVector3 mRight = { 0.5f, 0.145f, 0.0f };
 
 	// RGB - red, green, blue
 	basicVector3 red = { 1.0f, 0.0f, 0.0f };
@@ -180,6 +225,7 @@ int main()
 		0, 3, 4
 	};
 
+
 	unsigned int vertexArrayObj, vbo_points, vbo_colors, elementBufferObj;
 	glGenVertexArrays(1, &vertexArrayObj); // vertex array object creation
 	glGenBuffers(1, &vbo_points); // object creation, store id in our unsigned int
@@ -199,8 +245,6 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
-
-
 	// specify how our vertex data should be interpreted
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
@@ -217,36 +261,47 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
-	
-	// the above settings are associated with our currently bound vertex buffer object
+	return { vertexArrayObj, vbo_points, vbo_colors, elementBufferObj };
+}
 
-	// the render loop
-	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
-	{
-		processInput(window); // handle user input
+// draw two triangles right next to each other
+objectIds exercise1() {
 
-		// RENDER COMMANDS ...
-		glClearColor(0x2D / RGB_CEIL, 0x19 / RGB_CEIL, 0x32 / RGB_CEIL, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+	basicVector3 red = { 1.0f, 0.0f, 0.0f }; // red
+	basicVector3 green = { 0.0f, 1.0f, 0.0f };
 
-		glUseProgram(shaderProgram);
-		glBindVertexArray(vertexArrayObj);
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+	basicVector3 points[] = {
+		{-0.5f, 0.0f, 0.0f}, // left triangle top
+		{-0.75f, -0.5f, 0.0f}, // left triangle left
+		{-0.25f, -0.5f, 0.0f}, // left triangle right
+		{0.5f, 0.5f, 0.0f}, // right triangle top
+		{0.25f, 0.0f, 0.0f}, // right triangle left
+		{0.75, 0.0f, 0.0f}, // right triangle right
+	};
 
-		glfwSwapBuffers(window);
-		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
-	}
+	basicVector3 colors[] = {
+		red, red, red, // triangle 1
+		green, green, green // triangle 2
+	};
 
-	// deleting to avoid memory leaks
-	glDeleteVertexArrays(1, &vertexArrayObj);
-	glDeleteBuffers(1, &vbo_points);
-	glDeleteBuffers(1, &vbo_colors);
-	glDeleteBuffers(1, &elementBufferObj);
-	glDeleteProgram(shaderProgram);
+	unsigned int vao, vbo_points, vbo_colors;
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo_points);
+	glGenBuffers(1, &vbo_colors);
 
+	glBindVertexArray(vao);
 
-	glfwTerminate(); // clean all of glfw's allocated resources
-	return 0;
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
+	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, sizeof(basicVector3), NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return {vao, vbo_points, vbo_colors, 0};
 }
