@@ -144,8 +144,8 @@
     <ClInclude Include="src\ErrorManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\Fragment.shader" />
-    <None Include="resources\shaders\Vertex.shader" />
+    <None Include="resources\shaders\ColorMapping.sfrag" />
+    <None Include="resources\shaders\NormalMapping.svert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

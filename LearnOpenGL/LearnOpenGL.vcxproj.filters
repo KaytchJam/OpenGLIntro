@@ -28,7 +28,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\Vertex.shader" />
-    <None Include="resources\shaders\Fragment.shader" />
+    <None Include="resources\shaders\NormalMapping.svert" />
+    <None Include="resources\shaders\ColorMapping.sfrag" />
   </ItemGroup>
 </Project>
