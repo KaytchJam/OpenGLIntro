@@ -15,13 +15,22 @@ struct objectIds
 	unsigned int vao1, vao2, vbo1, vbo2, ebo;
 };
 
+struct shaderIds
+{
+	unsigned int program1, program2, program3;
+};
+
 objectIds rainbowPentagon();
+
+// Vertex Array & Buffer Exercises
 objectIds exercise1();
 objectIds exercise2();
 objectIds exercise3();
 
-void allErrorsFound() {
+// Shader & Uniform Exercises
 
+void allErrorsFound() 
+{
 	GLenum current_error = glGetError();
 	while (current_error)
 	{
@@ -194,7 +203,7 @@ int main()
 	//objectIds ids = rainbowPentagon();
 	objectIds ids = exercise3();
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
@@ -241,6 +250,7 @@ int main()
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
+		allErrorsFound(); // errors found during each iteration
 	}
 
 	// deleting to avoid memory leaks
