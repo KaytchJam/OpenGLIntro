@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 // basic vector struct for storing x, y, and z values
 struct basicVector3
 {
@@ -40,11 +42,11 @@ void allErrorsFound()
 }
 
 
-void errorCheck(int success, unsigned int vso, char* infoLog) 
+void errorCheck(int success, unsigned int shader_obj, char* infoLog) 
 {
 	if (!success)
 	{
-		glGetShaderInfoLog(vso, 512, NULL, infoLog);
+		glGetShaderInfoLog(shader_obj, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 }
@@ -173,7 +175,7 @@ int main()
 	//// finally, we use the program
 	//glUseProgram(shaderProgram);
 	//// once our shaders have been linked to the program object, we can delete them
-	//glDeleteShader(vertexShaderObject);
+	glDeleteShader(vertexShaderObject);
 	//glDeleteShader(fragmentShaderObject);
 
 	// EXERCISE THREE
