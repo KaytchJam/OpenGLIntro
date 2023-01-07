@@ -103,14 +103,14 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	Shader upsideDownShader("resources/shaders/vertex/UpsideDown.shader", "resources/shaders/fragment/ColorUniform.shader");
-
-
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
-	objectIds ids = exercise3();
+	//objectIds ids = exercise3();
+	objectIds ids = drawTriangle();
+	upsideDownShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
@@ -154,6 +154,11 @@ int main()
 		glUseProgram(yellowProgram);
 		glBindVertexArray(ids.vao2);
 		glDrawArrays(GL_TRIANGLES, 0, 3);*/
+
+		// Flip triangle upside down exercise
+		upsideDownShader.useShader();
+		glBindVertexArray(ids.vao1);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)

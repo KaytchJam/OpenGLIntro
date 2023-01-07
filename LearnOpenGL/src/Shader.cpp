@@ -36,8 +36,6 @@ Shader::Shader(const char* vertexFilePath, const char* shaderFilePath) : program
 	glAttachShader(program_ID, vs_ID);
 	glAttachShader(program_ID, fs_ID);
 	glLinkProgram(program_ID);
-
-	int success;
 	glGetProgramiv(program_ID, GL_LINK_STATUS, &success);
 	errorCheck(program_ID, success, infoLog);
 
@@ -50,8 +48,13 @@ Shader::~Shader()
 	glDeleteProgram(program_ID);
 }
 
+void Shader::useShader()
+{
+	glUseProgram(program_ID);
+}
+
 // SHADER CREATION
-shaderCode getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath)
+shaderCode Shader::getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
 	std::string vertexCode;
 	std::string fragmentCode;

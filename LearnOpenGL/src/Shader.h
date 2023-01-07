@@ -1,6 +1,6 @@
 #pragma once
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include <unordered_map>
 #include <string>
@@ -35,5 +35,5 @@ private:
 	// store the code of our shader files as strings
 
 	int getUniformLocation(const std::string& uniform_name);
-	static shaderCode getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath);
+	shaderCode getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath);
 };

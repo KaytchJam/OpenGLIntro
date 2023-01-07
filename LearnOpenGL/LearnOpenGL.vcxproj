@@ -139,13 +139,18 @@
   <ItemGroup>
     <ClCompile Include="src\Entry.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ErrorManager.h" />
+    <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\ColorMapping.sfrag" />
-    <None Include="resources\shaders\NormalMapping.svert" />
+    <None Include="resources\shaders\fragment\ColorUniform.shader" />
+    <None Include="resources\shaders\fragment\ColorYellow.shader" />
+    <None Include="resources\shaders\vertex\NoTransformation.shader" />
+    <None Include="resources\shaders\fragment\ColorRed.shader" />
+    <None Include="resources\shaders\vertex\UpsideDown.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
