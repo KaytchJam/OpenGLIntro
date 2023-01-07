@@ -12,24 +12,27 @@ static void errorCheck(unsigned int shader_obj, int success, char *infoLog)
 	}
 } 
 
-Shader::Shader(const char* vertexFilePath, const char* shaderFilePath) : program_ID(0)
+Shader::Shader(const char *vertexFilePath, const char *shaderFilePath) : program_ID(0)
 {
 	shaderCode sourceCodes = getShaderSourceCode(vertexFilePath, shaderFilePath);
-	std::printf("Vertex Shader:\n%s\n\n", sourceCodes.vertexSourceCode);
-	std::printf("Fragment Shader:\n%s\n\n", sourceCodes.fragmentSourceCode);
+	std::printf("Vertex Shader:\n%s\n\n", sourceCodes.vertexSourceCode.c_str());
+	std::printf("Fragment Shader:\n%s\n\n", sourceCodes.fragmentSourceCode.c_str());
 
 	int success;
 	char infoLog[512];
 
+	const char* frag = sourceCodes.vertexSourceCode.c_str();
+	const char* vert = sourceCodes.fragmentSourceCode.c_str();
+
 	unsigned int vs_ID, fs_ID;
 	vs_ID = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs_ID, 1, &sourceCodes.vertexSourceCode, NULL);
+	glShaderSource(vs_ID, 1, &vert, NULL);;
 	glCompileShader(vs_ID);
 	glGetShaderiv(vs_ID, GL_COMPILE_STATUS, &success);
 	errorCheck(vs_ID, success, infoLog);
 
 	fs_ID = glCreateShader(GL_FRAGMENT_SHADER);
-	glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fs_ID, 1, &frag, NULL);
 	glCompileShader(fs_ID);
 	glGetShaderiv(fs_ID, GL_COMPILE_STATUS, &success);
 	errorCheck(fs_ID, success, infoLog);
@@ -58,11 +61,14 @@ void Shader::useShader()
 // SHADER CREATION
 shaderCode Shader::getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
+	std::cout << vertexFilePath << std::endl;
+	std::cout << fragmentFilePath << std::endl;
+
 	std::string vertexCode, fragmentCode;
 	std::ifstream vShaderFile, fShaderFile;
 
-	//vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	//fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 	try
 	{
@@ -84,7 +90,7 @@ shaderCode Shader::getShaderSourceCode(const std::string& vertexFilePath, const 
 		std::cout << "SHADER::GET_SHADER_SOURCE::ERROR_DURING_FILE_READ" << std::endl;
 	}
 
-	return { vertexCode.c_str(), fragmentCode.c_str() };
+	return { vertexCode, fragmentCode };
 }
 
 // FLOAT UNIFORMS

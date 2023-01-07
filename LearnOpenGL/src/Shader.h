@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <string>
 
-struct shaderCode { const char *vertexSourceCode, *fragmentSourceCode; };
+struct shaderCode { const std::string vertexSourceCode, fragmentSourceCode; };
 
 // each shader object will represent an instance of a "shader program"
 
@@ -16,7 +16,7 @@ public:
 	unsigned int program_ID;
 
 	// constructor
-	Shader(const char* vertexFilePath, const char* shaderFilePath);
+	Shader(const char *vertexFilePath, const char *shaderFilePath);
 	// destructor
 	~Shader();
 
