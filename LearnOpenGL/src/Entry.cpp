@@ -162,7 +162,7 @@ int main()
 
 		// Flip triangle upside down exercise
 		horiShader.useShader();
-		horiShader.setUniform1f("offset", offset);
+		//horiShader.setUniform1f("xOffset", offset);
 		horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
