@@ -112,9 +112,9 @@ int main()
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
-	glEnable(GL_CULL_FACE); 
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	//glEnable(GL_CULL_FACE); 
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
