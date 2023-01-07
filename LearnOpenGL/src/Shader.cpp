@@ -125,7 +125,7 @@ int Shader::getUniformLocation(const std::string& uniform_name)
 	std::unordered_map<std::string, int>::iterator myIt = uniformLocationCache.find(uniform_name);
 	if (myIt != uniformLocationCache.end()) 
 	{
-		std::cout << "Uniform already in the cache! Nice!" << std::endl;
+		//std::cout << "Uniform already in the cache! Nice!" << std::endl;
 		return myIt->second; // quick uniform location retrieval
 	}
 

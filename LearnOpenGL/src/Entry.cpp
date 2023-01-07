@@ -103,7 +103,7 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	Shader upsideDownShader("resources/shaders/vertex/UpsideDown.shader", "resources/shaders/fragment/ColorUniform.shader");
+	Shader horiShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/ColorUniform.shader");
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
@@ -120,7 +120,7 @@ int main()
 	std::cout << "about to enter the rendering loop" << std::endl;
 
 	float offset = 0.0f;
-	float add = 0.01;
+	float add = 0.001f;
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -161,14 +161,14 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 3);*/
 
 		// Flip triangle upside down exercise
-		upsideDownShader.useShader();
-		upsideDownShader.setUniform1f("offset", offset);
-		upsideDownShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		horiShader.useShader();
+		horiShader.setUniform1f("offset", offset);
+		horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		offset += add;
-		if (offset == 1.0f || offset == -1.0f) add *= -1;
+		//offset += add;
+		//if (offset == 1.0f || offset == -1.0f) add *= -1;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)

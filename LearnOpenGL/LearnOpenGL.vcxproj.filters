@@ -39,5 +39,6 @@
     <None Include="resources\shaders\fragment\ColorRed.shader" />
     <None Include="resources\shaders\fragment\ColorUniform.shader" />
     <None Include="resources\shaders\vertex\UpsideDown.shader" />
+    <None Include="resources\shaders\vertex\HorizontalOffset.shader" />
   </ItemGroup>
 </Project>

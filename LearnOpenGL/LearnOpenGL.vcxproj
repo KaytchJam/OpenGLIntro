@@ -148,6 +148,7 @@
   <ItemGroup>
     <None Include="resources\shaders\fragment\ColorUniform.shader" />
     <None Include="resources\shaders\fragment\ColorYellow.shader" />
+    <None Include="resources\shaders\vertex\HorizontalOffset.shader" />
     <None Include="resources\shaders\vertex\NoTransformation.shader" />
     <None Include="resources\shaders\fragment\ColorRed.shader" />
     <None Include="resources\shaders\vertex\UpsideDown.shader" />
