@@ -110,9 +110,6 @@ int main()
 	//objectIds ids = exercise3();
 	objectIds ids = drawTriangle();
 	std::cout << "Buffer stuff dealt with" << std::endl;
-	upsideDownShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
-
-	std::cout << "Uniform stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
@@ -162,6 +159,7 @@ int main()
 
 		// Flip triangle upside down exercise
 		upsideDownShader.useShader();
+		upsideDownShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
