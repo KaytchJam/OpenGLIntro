@@ -12,17 +12,17 @@ static void errorCheck(unsigned int shader_obj, int success, char *infoLog)
 	}
 } 
 
-Shader::Shader(const char *vertexFilePath, const char *shaderFilePath) : program_ID(0)
+Shader::Shader(const char *vertexFilePath, const char *fragmentFilePath) : program_ID(0)
 {
-	shaderCode sourceCodes = getShaderSourceCode(vertexFilePath, shaderFilePath);
+	shaderCode sourceCodes = getShaderSourceCode(vertexFilePath, fragmentFilePath);
 	std::printf("Vertex Shader:\n%s\n\n", sourceCodes.vertexSourceCode.c_str());
 	std::printf("Fragment Shader:\n%s\n\n", sourceCodes.fragmentSourceCode.c_str());
 
 	int success;
 	char infoLog[512];
 
-	const char* frag = sourceCodes.vertexSourceCode.c_str();
-	const char* vert = sourceCodes.fragmentSourceCode.c_str();
+	const char *vert  = sourceCodes.vertexSourceCode.c_str();
+	const char *frag = sourceCodes.fragmentSourceCode.c_str();
 
 	unsigned int vs_ID, fs_ID;
 	vs_ID = glCreateShader(GL_VERTEX_SHADER);
@@ -46,6 +46,8 @@ Shader::Shader(const char *vertexFilePath, const char *shaderFilePath) : program
 
 	glDeleteShader(vs_ID);
 	glDeleteShader(fs_ID);
+
+	std::cout << "Shader Constructed." << std::endl;
 }
 
 Shader::~Shader()
@@ -123,11 +125,15 @@ int Shader::getUniformLocation(const std::string& uniform_name)
 	std::unordered_map<std::string, int>::iterator myIt = uniformLocationCache.find(uniform_name);
 	if (myIt != uniformLocationCache.end()) 
 	{
+		std::cout << "Uniform already in the cache! Nice!" << std::endl;
 		return myIt->second; // quick uniform location retrieval
 	}
 
 	int location = glGetUniformLocation(program_ID, uniform_name.c_str());
-	if (location == -1) std::cout << "Warning: uniform '" << uniform_name << "' doesn't exist in source code!" << std::endl;
+	if (location == -1)
+	{
+		std::cout << "Warning: uniform '" << uniform_name << "' doesn't exist in source code!" << std::endl;
+	}
 
 	uniformLocationCache[uniform_name] = location;
 	return location;

@@ -109,7 +109,10 @@ int main()
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	objectIds ids = drawTriangle();
+	std::cout << "Buffer stuff dealt with" << std::endl;
 	upsideDownShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
+
+	std::cout << "Uniform stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	glEnable(GL_CULL_FACE); 
@@ -117,6 +120,7 @@ int main()
 	glFrontFace(GL_CCW);
 	
 	// the above settings are associated with our currently bound vertex buffer object
+	std::cout << "about to enter the rendering loop" << std::endl;
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -405,8 +409,8 @@ objectIds drawTriangle()
 	};
 
 	unsigned int vao, vbo;
-	glCreateVertexArrays(1, &vao);
-	glCreateBuffers(1, &vbo);
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -416,6 +420,8 @@ objectIds drawTriangle()
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	allErrorsFound();
 
 	return { vao, 0, vbo, 0, 0 };
 }
