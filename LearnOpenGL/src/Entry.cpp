@@ -22,7 +22,9 @@ struct shaderIds
 	unsigned int program1, program2, program3;
 };
 
+// General Shape Draws
 objectIds rainbowPentagon();
+objectIds drawTriangle();
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -100,104 +102,7 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	// writing shader code
-	const char* vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"layout (location = 1) in vec3 aColor;\n"
-		"out vec3 colour;\n"
-		"void main()\n"
-		"{\n"
-		"   colour = aColor;\n"
-		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"}\0";
-
-	const char* fragmentShaderSource = "#version 330 core\n"
-		"in vec3 colour;\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"    FragColor = vec4(colour, 1.0);\n"
-		"}\0";
-
-	const char* yellowFrag = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"    FragColor = vec4(1.0, 1.0, 0.0, 0.0);\n"
-		"}\0";
-
-	const char* redFrag = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"    FragColor = vec4(1.0, 0.0, 0.0, 0.0);\n"
-		"}\0";
-
-	unsigned int vertexShaderObject;
-	vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL); // binding our shader source to our vertex object
-	glCompileShader(vertexShaderObject); // compile our shader
-
-	// check for errors
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShaderObject, GL_COMPILE_STATUS, &success);
-	errorCheck(success, vertexShaderObject, infoLog);
-
-	unsigned int /*fragmentShaderObject,*/ fso2, fso3;
-	//fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
-	//glShaderSource(fragmentShaderObject, 1, &fragmentShaderSource, NULL);
-	//glCompileShader(fragmentShaderObject); // compile our shader
-
-	fso2 = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fso2, 1, &yellowFrag, NULL);
-	glCompileShader(fso2);
-
-	fso3 = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fso3, 1, &redFrag, NULL);
-	glCompileShader(fso3);
-
-
-
-	// create a program object that we'll link our two compiled shaders to
-	//unsigned int shaderProgram;
-	//shaderProgram = glCreateProgram();
-
-	//glAttachShader(shaderProgram, vertexShaderObject);
-	////glAttachShader(shaderProgram, fragmentShaderObject);
-	//glAttachShader(shaderProgram, fso3);
-	//glLinkProgram(shaderProgram); // links all our attached shaders within the program
-
-	//// check for errors
-	//glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	//errorCheck(success, shaderProgram, infoLog);
-
-	//// finally, we use the program
-	//glUseProgram(shaderProgram);
-	//// once our shaders have been linked to the program object, we can delete them
-	glDeleteShader(vertexShaderObject);
-	//glDeleteShader(fragmentShaderObject);
-
-	// EXERCISE THREE
-	unsigned int yellowProgram, redProgram;
-	yellowProgram = glCreateProgram();
-	redProgram = glCreateProgram();
-
-	glAttachShader(yellowProgram, vertexShaderObject);
-	glAttachShader(yellowProgram, fso2);
-	glLinkProgram(yellowProgram);
-
-	glGetProgramiv(yellowProgram, GL_LINK_STATUS, &success);
-
-	glAttachShader(redProgram, vertexShaderObject);
-	glAttachShader(redProgram, fso3);
-	glLinkProgram(redProgram);
-
-	glGetProgramiv(redProgram, GL_LINK_STATUS, &success);
-
-
-	glDeleteShader(fso2);
-	glDeleteShader(fso3);
+	Shader upsideDownShader("resources/shaders/vertex/UpsideDown.shader", "resources/shaders/fragment/ColorUniform.shader");
 
 
 	const float RGB_CEIL = 255;
@@ -242,13 +147,13 @@ int main()
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		// EXERCISE THREE
-		glUseProgram(redProgram);
+		/*glUseProgram(redProgram);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glUseProgram(yellowProgram);
 		glBindVertexArray(ids.vao2);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3);*/
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -258,9 +163,6 @@ int main()
 	// deleting to avoid memory leaks
 	glDeleteVertexArrays(2, &ids.vao1);
 	glDeleteBuffers(3, &ids.vbo1);
-	//glDeleteProgram(shaderProgram);
-	glDeleteProgram(redProgram);
-	glDeleteProgram(yellowProgram);
 
 
 	glfwTerminate(); // clean all of glfw's allocated resources
@@ -486,4 +388,28 @@ objectIds exercise3()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return {vaos[0], vaos[1], vbos[0], vbos[1], 0};
+}
+
+objectIds drawTriangle()
+{
+	basicVector3 vertices[] = {
+		{0.0f, 0.5f, 0.0f},
+		{0.5f, 0.0f, 0.0f},
+		{-0.5f, 0.0f, 0.0f}
+	};
+
+	unsigned int vao, vbo;
+	glCreateVertexArrays(1, &vao);
+	glCreateBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return { vao, 0, vbo, 0, 0 };
 }
