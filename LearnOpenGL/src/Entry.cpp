@@ -103,7 +103,7 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	Shader horiShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/ColorUniform.shader");
+	Shader horiShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/PositionColor.shader");
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
@@ -119,7 +119,7 @@ int main()
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
 
-	float offset = 0.0f;
+	float xOffset = 0.0f;
 	float add = 0.005f;
 
 	// the render loop
@@ -162,13 +162,14 @@ int main()
 
 		// Flip triangle upside down exercise
 		horiShader.useShader();
-		horiShader.setUniform1f("xOffset", offset);
-		horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		horiShader.setUniform1f("xOffset", xOffset);
+		horiShader.setUniform1f("yOffset", xOffset);
+		//horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		offset += add;
-		if (offset + 0.5f >= 1.0f || offset - 0.5f <= -1.0f) add *= -1;
+		xOffset += add;
+		if (xOffset + 0.5f >= 1.0f || xOffset - 0.5f <= -1.0f) add *= -1;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)

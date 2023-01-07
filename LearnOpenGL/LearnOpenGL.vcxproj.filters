@@ -40,5 +40,6 @@
     <None Include="resources\shaders\fragment\ColorUniform.shader" />
     <None Include="resources\shaders\vertex\UpsideDown.shader" />
     <None Include="resources\shaders\vertex\HorizontalOffset.shader" />
+    <None Include="resources\shaders\fragment\PositionColor.shader" />
   </ItemGroup>
 </Project>
