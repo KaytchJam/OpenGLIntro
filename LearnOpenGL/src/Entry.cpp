@@ -120,7 +120,7 @@ int main()
 	std::cout << "about to enter the rendering loop" << std::endl;
 
 	float offset = 0.0f;
-	float add = 0.001f;
+	float add = 0.005f;
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -162,13 +162,13 @@ int main()
 
 		// Flip triangle upside down exercise
 		horiShader.useShader();
-		//horiShader.setUniform1f("xOffset", offset);
+		horiShader.setUniform1f("xOffset", offset);
 		horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		//offset += add;
-		//if (offset == 1.0f || offset == -1.0f) add *= -1;
+		offset += add;
+		if (offset + 0.5f >= 1.0f || offset - 0.5f <= -1.0f) add *= -1;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
