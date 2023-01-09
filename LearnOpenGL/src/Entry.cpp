@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Shader.h"
+#include "vendor/stb_image/stb_image.h"
 #include <string>
 
 // basic vector struct for storing x, y, and z values
