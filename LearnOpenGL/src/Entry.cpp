@@ -26,6 +26,7 @@ struct shaderIds
 // General Shape Draws
 objectIds rainbowPentagon();
 objectIds drawTriangle();
+objectIds textureSquare();
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -431,3 +432,30 @@ objectIds drawTriangle()
 
 	return { vao, 0, vbo, 0, 0 };
 }
+
+objectIds textureSquare()
+{
+	basicVector3 vertices[] = {
+		{-0.5f, -0.5f, 0.0f},
+		{0.5f, -0.5f, 0.0f},
+		{0.5f, 0.5f, 0.0f},
+		{-0.5f, 0.5f, 0.0f}
+	};
+
+	basicVector3 indices[] = { {0, 1, 2}, {2, 3, 0} };
+
+	float texCoords[] = {
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f
+	};
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	return {};
+}
+
