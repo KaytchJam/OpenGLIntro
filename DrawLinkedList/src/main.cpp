@@ -3,12 +3,16 @@
 void insertAtEndTest(myLinkedList* ll);
 void insertWithinTest(myLinkedList* ll);
 void removalTest(myLinkedList* ll);
+void duplicateValueTest(myLinkedList* ll);
 
 int main()
 {
 	myLinkedList* ll = initializeLinkedList();
+	insertAtEndTest(ll);
 	insertWithinTest(ll);
-	removeAll(ll);
+	removalTest(ll);
+	duplicateValueTest(ll);
+
 
 
 	//insertAtEndTest(ll);
@@ -23,9 +27,8 @@ void insertAtEndTest(myLinkedList* ll) {
 	add(ll, 1);
 	add(ll, 2);
 	add(ll, 3);
-
-	printf("Printall.\n");
 	printList(ll);
+	removeAll(ll);
 }
 
 void insertWithinTest(myLinkedList* ll) {
@@ -45,9 +48,11 @@ void insertWithinTest(myLinkedList* ll) {
 	add(ll, 1);
 
 	printList(ll);
+	removeAll(ll);
 }
 
 void removalTest(myLinkedList* ll) {
+	printf("EXERCISE 3\n");
 	add(ll, 0);
 	add(ll, 1);
 	add(ll, 2);
@@ -65,5 +70,18 @@ void removalTest(myLinkedList* ll) {
 	remove(ll, 0); // remove 0
 
 	printList(ll);
+	removeAll(ll);
+}
 
+void duplicateValueTest(myLinkedList* ll) {
+
+	printf("EXERCISE 4\n");
+	add(ll, 1);
+	add(ll, 1);
+	add(ll, 1);
+	add(ll, 1);
+	add(ll, 1);
+	add(ll, 0);
+	printList(ll);
+	removeAll(ll);
 }
