@@ -7,9 +7,12 @@ void removalTest(myLinkedList* ll);
 int main()
 {
 	myLinkedList* ll = initializeLinkedList();
-	//insertWithinTest(ll);
+	insertWithinTest(ll);
+	removeAll(ll);
+
+
 	//insertAtEndTest(ll);
-	removalTest(ll);
+	//removalTest(ll);
 	return 0;
 }
 

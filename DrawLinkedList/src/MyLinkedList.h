@@ -108,7 +108,7 @@ static void remove(myLinkedList *ll, int index) {
 		free(temp);
 }
 
-static void removalAll(myLinkedList* ll) {
+static void removeAll(myLinkedList* ll) {
 	while (ll->size > 0) {
 		remove(ll, 0);
 	}
