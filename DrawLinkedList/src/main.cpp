@@ -2,12 +2,14 @@
 
 void insertAtEndTest(myLinkedList* ll);
 void insertWithinTest(myLinkedList* ll);
+void removalTest(myLinkedList* ll);
 
 int main()
 {
 	myLinkedList* ll = initializeLinkedList();
-	insertWithinTest(ll);
+	//insertWithinTest(ll);
 	//insertAtEndTest(ll);
+	removalTest(ll);
 	return 0;
 }
 
@@ -40,4 +42,25 @@ void insertWithinTest(myLinkedList* ll) {
 	add(ll, 1);
 
 	printList(ll);
+}
+
+void removalTest(myLinkedList* ll) {
+	add(ll, 0);
+	add(ll, 1);
+	add(ll, 2);
+	add(ll, 3);
+	add(ll, 4);
+	add(ll, 5);
+
+	printList(ll);
+
+	remove(ll, 3); // remove 3
+
+	printList(ll);
+
+	remove(ll, 2); // remove 2
+	remove(ll, 0); // remove 0
+
+	printList(ll);
+
 }

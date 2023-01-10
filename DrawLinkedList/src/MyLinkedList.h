@@ -14,13 +14,15 @@ typedef struct myLinkedList {
 	int size;
 } myLinkedList;
 
-void setNode(llNode* node, llNode* prevNode, int item, llNode* nextNode) {
+// set the fields of the specified node
+static void setNode(llNode* node, llNode* prevNode, int item, llNode* nextNode) {
 	node->prev = prevNode;
 	node->data = item;
 	node->next = nextNode;
 }
 
-llNode* createNode(llNode* prevNode, int item, llNode* nextNode) {
+// create a new node (without adding it to the linked list)
+static llNode* createNode(llNode* prevNode, int item, llNode* nextNode) {
 	llNode* newNode = (llNode*)malloc(sizeof(llNode));
 	assert(newNode != NULL);
 
@@ -28,7 +30,7 @@ llNode* createNode(llNode* prevNode, int item, llNode* nextNode) {
 	return newNode;
 }
 
-myLinkedList * initializeLinkedList() {
+static myLinkedList * initializeLinkedList() {
 	myLinkedList* newLL = (myLinkedList*)malloc(sizeof(myLinkedList));
 	assert(newLL != NULL);
 
@@ -41,7 +43,7 @@ myLinkedList * initializeLinkedList() {
 	return newLL;
 }
 
-void printNode(llNode *newNode) {
+static void printNode(llNode *newNode) {
 	printf("_______________\n");
 	printf("newNode data: %d\n", newNode->data);
 	printf("newNode prev data: %d\n", newNode->prev->data);
@@ -49,13 +51,13 @@ void printNode(llNode *newNode) {
 	printf("_______________\n");
 }
 
-void addFirst(myLinkedList *ll, int item) {
+static void addFirst(myLinkedList *ll, int item) {
 	llNode* newNode = createNode(ll->head, item, ll->head->next);
 	ll->head->next = newNode;
 	ll->size++;
 }
 
-void add(myLinkedList* ll, int item) {
+static void add(myLinkedList* ll, int item) {
 	llNode* temp = ll->head;
 	int count = -1;
 
@@ -70,13 +72,14 @@ void add(myLinkedList* ll, int item) {
 	ll->size++;
 }
 
-void remove(myLinkedList *ll, int index) {
+static void remove(myLinkedList *ll, int index) {
 	assert(index < ll->size && index >= 0);
 
 	int count;
 	llNode* temp = ll->head;
 
-		if (index > ll->size / 2) { // go in reverse
+		if (index > ll->size / 2) 
+		{ // go in reverse
 			count = ll->size - 1;
 			temp = temp->prev;
 
@@ -84,16 +87,34 @@ void remove(myLinkedList *ll, int index) {
 				count--;
 				temp = temp->prev;
 			}
-
-
-		} else { // go forward
+		} 
+		else 
+		{ // go forward
 			count = 0;
 			temp = temp->next;
 
+			while (count != index) {
+				count++;
+				temp = temp->next;
+			}
 		}
+
+		ll->size--;
+		llNode* before = temp->prev;
+		llNode* after = temp->next;
+		before->next = after;
+		after->prev = before;
+
+		free(temp);
 }
 
-void printList(myLinkedList* ll) {
+static void removalAll(myLinkedList* ll) {
+	while (ll->size > 0) {
+		remove(ll, 0);
+	}
+}
+
+static void printList(myLinkedList* ll) {
 
 	llNode* temp = ll->head->next;
 	for (int i = 0; i < ll->size; i++) {

@@ -165,13 +165,13 @@ int main()
 		// Flip triangle upside down exercise
 		horiShader.useShader();
 		horiShader.setUniform1f("xOffset", xOffset);
-		horiShader.setUniform1f("yOffset", xOffset);
+		horiShader.setUniform1f("yOffset", 0);
 		//horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
 		glBindVertexArray(ids.vao1);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		xOffset += add;
-		if (xOffset + 0.5f >= 1.0f || xOffset - 0.5f <= -1.0f) add *= -1;
+		if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -411,9 +411,9 @@ objectIds exercise3()
 objectIds drawTriangle()
 {
 	basicVector3 vertices[] = {
-		{0.0f, 0.5f, 0.0f},
-		{0.5f, 0.0f, 0.0f},
-		{-0.5f, 0.0f, 0.0f}
+		{0.0f, 0.25f, 0.0f},
+		{0.25f, 0.0f, 0.0f},
+		{-0.25f, 0.0f, 0.0f}
 	};
 
 	unsigned int vao, vbo;
