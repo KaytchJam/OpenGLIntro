@@ -70,6 +70,29 @@ void add(myLinkedList* ll, int item) {
 	ll->size++;
 }
 
+void remove(myLinkedList *ll, int index) {
+	assert(index < ll->size && index >= 0);
+
+	int count;
+	llNode* temp = ll->head;
+
+		if (index > ll->size / 2) { // go in reverse
+			count = ll->size - 1;
+			temp = temp->prev;
+
+			while (count != index) {
+				count--;
+				temp = temp->prev;
+			}
+
+
+		} else { // go forward
+			count = 0;
+			temp = temp->next;
+
+		}
+}
+
 void printList(myLinkedList* ll) {
 
 	llNode* temp = ll->head->next;
