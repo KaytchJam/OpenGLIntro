@@ -12,11 +12,6 @@ int main()
 	insertWithinTest(ll);
 	removalTest(ll);
 	duplicateValueTest(ll);
-
-
-
-	//insertAtEndTest(ll);
-	//removalTest(ll);
 	return 0;
 }
 
@@ -34,14 +29,14 @@ void insertAtEndTest(myLinkedList* ll) {
 void insertWithinTest(myLinkedList* ll) {
 
 	printf("EXERCISE 2\n");
-	add(ll, 5);
-	add(ll, 0);
-	add(ll, 4);
-	add(ll, 2);
+	addItem(ll, 5);
+	addItem(ll, 0);
+	addItem(ll, 4);
+	addItem(ll, 2);
 
 	printList(ll);
 
-	add(ll, 3);
+	addItem(ll, 3);
 	
 	printList(ll);
 
