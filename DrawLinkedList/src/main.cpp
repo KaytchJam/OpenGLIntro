@@ -23,10 +23,10 @@ int main()
 void insertAtEndTest(myLinkedList* ll) {
 
 	printf("EXERCISE 1\n");
-	add(ll, 0);
-	add(ll, 1);
-	add(ll, 2);
-	add(ll, 3);
+	addItem(ll, 0);
+	addItem(ll, 1);
+	addItem(ll, 2);
+	addItem(ll, 3);
 	printList(ll);
 	removeAll(ll);
 }

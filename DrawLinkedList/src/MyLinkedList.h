@@ -57,7 +57,7 @@ static void addFirst(myLinkedList *ll, int item) {
 	ll->size++;
 }
 
-static void add(myLinkedList* ll, int item) {
+static void addItem(myLinkedList* ll, int item) {
 	llNode* temp = ll->head;
 	int count = -1;
 
@@ -72,7 +72,7 @@ static void add(myLinkedList* ll, int item) {
 	ll->size++;
 }
 
-static void remove(myLinkedList *ll, int index) {
+static void removeItem(myLinkedList *ll, int index) {
 	assert(index < ll->size && index >= 0);
 
 	int count;
@@ -110,7 +110,7 @@ static void remove(myLinkedList *ll, int index) {
 
 static void removeAll(myLinkedList* ll) {
 	while (ll->size > 0) {
-		remove(ll, 0);
+		removeItem(ll, 0);
 	}
 }
 
