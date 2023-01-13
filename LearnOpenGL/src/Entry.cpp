@@ -438,10 +438,10 @@ objectIds drawTriangle()
 objectIds textureSquare(std::string img_path)
 {
 	basicVector3 vertices[] = {
-		{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f},
-		{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f},
-		{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f},
-		{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}
+		{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+		{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
+		{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f},
+		{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}
 	};
 
 	basicVector3 indices[] = { {0, 1, 2}, {2, 3, 0} };
@@ -498,6 +498,9 @@ objectIds textureSquare(std::string img_path)
 	}
 
 	stbi_image_free(data);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), NULL);
+	glEnableVertexAttribArray(2);
+
 	return { vao, 0, vbo[0], 0, vbo[1]};
 }
 
