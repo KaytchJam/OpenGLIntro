@@ -27,7 +27,7 @@ struct shaderIds
 // General Shape Draws
 objectIds rainbowPentagon();
 objectIds drawTriangle();
-objectIds textureSquare();
+objectIds textureSquare(std::string img_path);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -110,7 +110,8 @@ int main()
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
-	objectIds ids = drawTriangle();
+	//objectIds ids = drawTriangle();
+	objectIds ids = textureSquare();
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -434,13 +435,13 @@ objectIds drawTriangle()
 	return { vao, 0, vbo, 0, 0 };
 }
 
-objectIds textureSquare()
+objectIds textureSquare(std::string img_path)
 {
 	basicVector3 vertices[] = {
-		{-0.5f, -0.5f, 0.0f},
-		{0.5f, -0.5f, 0.0f},
-		{0.5f, 0.5f, 0.0f},
-		{-0.5f, 0.5f, 0.0f}
+		{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f},
+		{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f},
+		{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f},
+		{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}
 	};
 
 	basicVector3 indices[] = { {0, 1, 2}, {2, 3, 0} };
@@ -452,11 +453,51 @@ objectIds textureSquare()
 		0.0f, 1.0f
 	};
 
+	unsigned int vao, vbo[3];
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(3, vbo);
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 2, NULL);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 2, NULL);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	// texture stuffs
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// set wrapping/filtering options on bound 2D texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	return {};
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(img_path.c_str(), &width, &height, &nrChannels, 0);
+
+	if (data) {
+		glTexImage2D(GL_TEXTURE, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	} else {
+		std::cout << "Issue with texture loading" << std::endl;
+	}
+
+	stbi_image_free(data);
+	return { vao, 0, vbo[0], 0, vbo[1]};
 }
 
