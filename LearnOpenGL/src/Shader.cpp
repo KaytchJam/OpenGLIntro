@@ -3,12 +3,12 @@
 #include <sstream>
 #include <iostream>
 
-static void errorCheck(unsigned int shader_obj, int success, char *infoLog)
+static void errorCheck(unsigned int shader_obj, int success, char *infoLog, const char * type)
 {
 	if (!success)
 	{
 		glGetShaderInfoLog(shader_obj, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED OR PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::" << type << "::COMPILATION_FAILED OR PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 } 
 
@@ -29,20 +29,20 @@ Shader::Shader(const char *vertexFilePath, const char *fragmentFilePath) : progr
 	glShaderSource(vs_ID, 1, &vert, NULL);;
 	glCompileShader(vs_ID);
 	glGetShaderiv(vs_ID, GL_COMPILE_STATUS, &success);
-	errorCheck(vs_ID, success, infoLog);
+	errorCheck(vs_ID, success, infoLog, "VERTEX");
 
 	fs_ID = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fs_ID, 1, &frag, NULL);
 	glCompileShader(fs_ID);
 	glGetShaderiv(fs_ID, GL_COMPILE_STATUS, &success);
-	errorCheck(fs_ID, success, infoLog);
+	errorCheck(fs_ID, success, infoLog, "FRAGMENT");
 
 	program_ID = glCreateProgram();
 	glAttachShader(program_ID, vs_ID);
 	glAttachShader(program_ID, fs_ID);
 	glLinkProgram(program_ID);
 	glGetProgramiv(program_ID, GL_LINK_STATUS, &success);
-	errorCheck(program_ID, success, infoLog);
+	errorCheck(program_ID, success, infoLog, "PROGRAM");
 
 	glDeleteShader(vs_ID);
 	glDeleteShader(fs_ID);

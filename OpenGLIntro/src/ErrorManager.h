@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#define ASSERT(x) if (!(x)) __debugbreak();
+#define ASSERT(x) if (!(x)) __debugbreak()
 #define GLCall(x) glClearError();\
     x;\
     ASSERT(glLogCall(#x, __FILE__, __LINE__))

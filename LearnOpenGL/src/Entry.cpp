@@ -5,6 +5,7 @@
 
 #include "Shader.h"
 #include "vendor/stb_image/stb_image.h"
+#include "ErrorHandler.h"
 #include <string>
 
 // basic vector struct for storing x, y, and z values
@@ -180,14 +181,14 @@ int main()
 		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
 
 		// TEXTURE EXERCISE
-		glBindTexture(GL_TEXTURE_2D, ids.txt1);
+		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		myShader.useShader();
 		glBindVertexArray(ids.vao1);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
-		allErrorsFound(); // errors found during each iteration
+		//allErrorsFound(); // errors found during each iteration
 	}
 
 	// deleting to avoid memory leaks

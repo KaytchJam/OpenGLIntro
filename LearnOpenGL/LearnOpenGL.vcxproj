@@ -152,7 +152,7 @@
     <None Include="resources\shaders\fragment\ColorYellow.shader" />
     <None Include="resources\shaders\fragment\PositionColor.shader" />
     <None Include="resources\shaders\fragment\TextureOutFrag.shader" />
-    <None Include="resources\shaders\vertex\TextureOutVertshader" />
+    <None Include="resources\shaders\vertex\TextureOutVert.shader" />
     <None Include="resources\shaders\vertex\HorizontalOffset.shader" />
     <None Include="resources\shaders\vertex\NoTransformation.shader" />
     <None Include="resources\shaders\fragment\ColorRed.shader" />
