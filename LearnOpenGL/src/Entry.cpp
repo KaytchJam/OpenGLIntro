@@ -450,38 +450,39 @@ objectIds drawTriangle()
 
 extendedObjectIds textureSquare(std::string img_path)
 {
-	basicVector3 vertices[] = {
-		{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-		{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f},
-		{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f},
-		{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}
+
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 
+		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
 
-	unsigned int vao, vbo[2];
-	GLCall(glGenVertexArrays(1, &vao));
-	GLCall(glGenBuffers(2, vbo));
-	GLCall(glBindVertexArray(vao));
+	unsigned int VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
-	// positions
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo[0]));
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, NULL);
-	glEnableVertexAttribArray(0);
 
-	// colors
-	//glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(2 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// elements
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(6 * sizeof(float)));
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+
 
 	// texture stuffs
 	unsigned int texture;
@@ -511,6 +512,6 @@ extendedObjectIds textureSquare(std::string img_path)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return { vao, 0, vbo[0], vbo[1], vbo[2], 0, texture, 0 };
+	return { VAO, 0, VBO, 0, EBO, 0, texture, 0};
 }
 

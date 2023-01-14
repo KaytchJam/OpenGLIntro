@@ -11,10 +11,10 @@ struct shaderCode { const std::string vertexSourceCode, fragmentSourceCode; };
 
 class Shader
 {
-public:
+private:
 	// program ID
 	unsigned int program_ID;
-
+public:
 	// constructor
 	Shader(const char *vertexFilePath, const char *shaderFilePath);
 	// destructor
