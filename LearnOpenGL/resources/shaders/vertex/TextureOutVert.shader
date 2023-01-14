@@ -10,5 +10,5 @@ out vec2 textureCoords;
 void main() {
 	gl_Position = vec4(myPos, 1.0);
 	ourColor = myColor;
-	textureCoords = myTextureCoords;
+	textureCoords = vec2(textureCoords.x, textureCoords.y);
 }
