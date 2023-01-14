@@ -457,41 +457,37 @@ extendedObjectIds textureSquare(std::string img_path)
 		{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}
 	};
 
-	basicVector3 indices[] = { {0, 1, 2}, {2, 3, 0} };
+	unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
 
-	float texCoords[] = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f
-	};
+	unsigned int vao, vbo[2];
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glGenBuffers(2, vbo));
+	GLCall(glBindVertexArray(vao));
 
-	unsigned int vao, vbo[3];
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(3, vbo);
-	glBindVertexArray(vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	// positions
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo[0]));
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, NULL);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// colors
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
+	// elements
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// texture stuffs
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+
 
 	// set wrapping/filtering options on bound 2D texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -510,8 +506,10 @@ extendedObjectIds textureSquare(std::string img_path)
 	}
 
 	stbi_image_free(data);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return { vao, 0, vbo[0], vbo[1], vbo[2], 0, texture, 0 };
 }
