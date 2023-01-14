@@ -19,6 +19,11 @@ struct objectIds
 	unsigned int vao1, vao2, vbo1, vbo2, ebo;
 };
 
+struct extendedObjectIds
+{
+	unsigned int vao1, vao2, vbo1, vbo2, ebo1, ebo2, txt1, txt2;
+};
+
 struct shaderIds
 {
 	unsigned int program1, program2, program3;
@@ -27,7 +32,7 @@ struct shaderIds
 // General Shape Draws
 objectIds rainbowPentagon();
 objectIds drawTriangle();
-objectIds textureSquare(std::string img_path);
+extendedObjectIds textureSquare(std::string img_path);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -105,13 +110,13 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	Shader horiShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/PositionColor.shader");
+	Shader myShader("resources/shaders/vertex/TextureOutVert.shader", "resources/shaders/fragment/TextureOutFrag.shader");
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
-	objectIds ids = textureSquare();
+	extendedObjectIds ids = textureSquare("resources/textures/brick_wall_texture.jpg");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -164,15 +169,21 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 3);*/
 
 		// Flip triangle upside down exercise
-		horiShader.useShader();
-		horiShader.setUniform1f("xOffset", xOffset);
-		horiShader.setUniform1f("yOffset", 0);
+		//horiShader.useShader();
+		//horiShader.setUniform1f("xOffset", xOffset);
+		//horiShader.setUniform1f("yOffset", 0);
 		//horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
-		glBindVertexArray(ids.vao1);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glBindVertexArray(ids.vao1);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		xOffset += add;
-		if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
+		//xOffset += add;
+		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
+
+		// TEXTURE EXERCISE
+		glBindTexture(GL_TEXTURE_2D, ids.txt1);
+		myShader.useShader();
+		glBindVertexArray(ids.vao1);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -181,7 +192,8 @@ int main()
 
 	// deleting to avoid memory leaks
 	glDeleteVertexArrays(2, &ids.vao1);
-	glDeleteBuffers(3, &ids.vbo1);
+	glDeleteBuffers(4, &ids.vbo1);
+	glDeleteTextures(2, &ids.txt1);
 
 
 	glfwTerminate(); // clean all of glfw's allocated resources
@@ -435,7 +447,7 @@ objectIds drawTriangle()
 	return { vao, 0, vbo, 0, 0 };
 }
 
-objectIds textureSquare(std::string img_path)
+extendedObjectIds textureSquare(std::string img_path)
 {
 	basicVector3 vertices[] = {
 		{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
@@ -460,12 +472,12 @@ objectIds textureSquare(std::string img_path)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 2, NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, NULL);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 2, (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
@@ -474,7 +486,6 @@ objectIds textureSquare(std::string img_path)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 
 	// texture stuffs
 	unsigned int texture;
@@ -498,9 +509,9 @@ objectIds textureSquare(std::string img_path)
 	}
 
 	stbi_image_free(data);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (6 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(basicVector3) * 3, (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	return { vao, 0, vbo[0], 0, vbo[1]};
+	return { vao, 0, vbo[0], vbo[1], vbo[2], 0, texture, 0 };
 }
 
