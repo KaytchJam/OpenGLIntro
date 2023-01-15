@@ -25,6 +25,7 @@ basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.
 objectIds rainbowPentagon();
 objectIds drawTriangle();
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
+extendedObjectIds drawGrid();
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -111,7 +112,7 @@ int main()
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
 	std::string path_header = "resources/textures/";
-	extendedObjectIds ids = bouncingLogo(path_header + "awesomeface.png");
+	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -200,7 +201,7 @@ int main()
 		glfwGetWindowSize(window, &w, &h);
 		addVec.x = copysign(1, addVec.x)  * ((float) w / (w * 144));
 		addVec.y = copysign(1, addVec.y) * ((float) h / (h * 169));
-		std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
+		//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
 
 		offsetV = addVector(offsetV, addVec);
 		if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
@@ -578,12 +579,12 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 	
-	std::cout << "BINDING VERTEX BUFFER" << std::endl;
+	//std::cout << "BINDING VERTEX BUFFER" << std::endl;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	std::cout << "BINDING ELEMENT BUFFER" << std::endl;
+	//std::cout << "BINDING ELEMENT BUFFER" << std::endl;
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -594,7 +595,7 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*) (3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	std::cout << "TEXTURE STUFFS" << std::endl;
+	//std::cout << "TEXTURE STUFFS" << std::endl;
 	unsigned int texture1;
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -605,21 +606,20 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-	std::cout << "IMAGE LOADING" << std::endl;
+	//std::cout << "IMAGE LOADING" << std::endl;
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, nr_channels;
 	unsigned char* img_data = stbi_load(logo_path.c_str(), &width, &height, &nr_channels, 0);
 	if (img_data) {
-		std::cout << "TEX IMAGE 2D" << std::endl;
+		//std::printf("number of channels: %d", nr_channels);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
 		std::cout << "Failed to load texture" << std::endl;
 	}
-	std::cout << "FREEING IMAGE" << std::endl;
+	//std::cout << "FREEING IMAGE" << std::endl;
 	stbi_image_free(img_data);
 
 	glBindVertexArray(0);
@@ -629,5 +629,10 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 
 	std::cout << "leaving bouncingLogo" << std::endl;
 	return {VAO, 0, VBO, 0, EBO, 0, texture1, 0};
+}
+
+extendedObjectIds drawGrid() 
+{
+	return {};
 }
 
