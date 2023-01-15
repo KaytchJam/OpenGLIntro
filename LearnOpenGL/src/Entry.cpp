@@ -40,7 +40,8 @@ objectIds exercise1();
 objectIds exercise2();
 objectIds exercise3();
 
-// Shader & Uniform Exercises
+// Messing Around / Testing
+extendedObjectIds bouncingLogo(std::string logo_path);
 
 void allErrorsFound() 
 {
@@ -457,7 +458,7 @@ objectIds drawTriangle()
 	return { vao, 0, vbo, 0, 0 };
 }
 
-extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
+extendedObjectIds textureSquare(std::string& img_path, std::string& img_path_2)
 {
 
 	float vertices[] = {
@@ -542,5 +543,10 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return { VAO, 0, VBO, 0, EBO, 0, texture1, texture2};
+}
+
+extendedObjectIds bouncingLogo(std::string& logo_path)
+{
+	return {};
 }
 
