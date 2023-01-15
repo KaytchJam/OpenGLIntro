@@ -186,15 +186,13 @@ int main()
 		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
 
 		// TEXTURE EXERCISE
-		GLCall(glActiveTexture(GL_TEXTURE0));
-		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
-		GLCall(glActiveTexture(GL_TEXTURE1));
-		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));
-
-		GLCall(myShader.useShader());
-
-		GLCall(glBindVertexArray(ids.vao1));
-		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+		//GLCall(glActiveTexture(GL_TEXTURE0));
+		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
+		//GLCall(glActiveTexture(GL_TEXTURE1));
+		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));
+		//GLCall(myShader.useShader());
+		//GLCall(glBindVertexArray(ids.vao1));
+		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -559,7 +557,50 @@ extendedObjectIds bouncingLogo(std::string& logo_path)
 
 		-0.25f, 0.25f, 0.0f, // positions 4
 		0.0f, 1.0f, // texture coords 4
+	};
+
+	unsigned int indices[] = {0, 1, 2, 2, 3, 0}; // square indices
+
+	unsigned int VAO, VBO, EBO;
+	glGenVertexArrays(1, &VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, NULL);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*) (3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	unsigned int texture1;
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height, nr_channels;
+	unsigned char* img_data = stbi_load(logo_path.c_str(), &width, &height, &nr_channels, 0);
+	if (img_data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	return {};
+	stbi_image_free(img_data);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE, 0);
+
+	return {VAO, 0, VBO, 0, EBO, 0, texture1, 0};
 }
 
