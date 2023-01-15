@@ -507,6 +507,7 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 	}
 	stbi_image_free(data);
 
+	glActiveTexture(GL_TEXTURE1);
 	unsigned int texture2;
 	if (img_path_2 != "")
 	{
@@ -539,6 +540,6 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return { VAO, 0, VBO, 0, EBO, 0, texture, 0};
+	return { VAO, 0, VBO, 0, EBO, 0, texture, texture2};
 }
 
