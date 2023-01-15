@@ -24,10 +24,13 @@ public:
 	void useShader();
 
 	// Uniform functions
+	// floats
 	void setUniform1f(const std::string& uniform_name, float v0);
 	void setUniform2f(const std::string& uniform_name, float v0, float v1);
 	void setUniform3f(const std::string& uniform_name, float v0, float v1, float v2);
 	void setUniform4f(const std::string& uniform_name, float v0, float v1, float v2, float v3);
+	// integers
+	void setUniform1i(const std::string& uniform_name, int v0);
 
 private:
 	// a cache that'll store all our uniform locations
