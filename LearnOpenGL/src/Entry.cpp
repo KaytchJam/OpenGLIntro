@@ -112,14 +112,16 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	Shader myShader("resources/shaders/vertex/TextureOutVert.shader", "resources/shaders/fragment/TextureOutFrag.shader");
+	//std::string shaderPath("resources/shaders/");
+	Shader myShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/TextureOutFrag.shader");
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
 	std::string path_header = "resources/textures/";
-	extendedObjectIds ids = textureSquare(path_header + "brick_wall_texture.jpg", path_header + "awesomeface.png");
+	//extendedObjectIds ids = textureSquare(path_header + "brick_wall_texture.jpg", path_header + "awesomeface.png");
+	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -130,12 +132,12 @@ int main()
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
 
-	float xOffset = 0.0f;
-	float add = 0.005f;
+	///float xOffset = 0.0f;
+	///float add = 0.005f;
 
-	GLCall(myShader.useShader());
-	GLCall(myShader.setUniform1i("texture1", 0));
-	GLCall(myShader.setUniform1i("texture2", 1));
+	//GLCall(myShader.useShader());
+	//GLCall(myShader.setUniform1i("texture1", 0));
+	//GLCall(myShader.setUniform1i("texture2", 1));
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
