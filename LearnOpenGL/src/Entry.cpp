@@ -137,6 +137,12 @@ int main()
 	//GLCall(myShader.useShader());
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
+	const char* xOffset_s = "xOffset";
+	const char* yOffset_s = "yOffset";
+	myShader.useShader();
+	myShader.setUniform1f(xOffset_s, 0);
+	myShader.setUniform1f(yOffset_s, 0);
+
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
@@ -194,6 +200,10 @@ int main()
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
+		GLCall(glBindVertexArray(ids.vao1));
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -457,7 +467,7 @@ objectIds drawTriangle()
 	return { vao, 0, vbo, 0, 0 };
 }
 
-extendedObjectIds textureSquare(std::string& img_path, std::string& img_path_2)
+extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 {
 
 	float vertices[] = {
@@ -544,7 +554,7 @@ extendedObjectIds textureSquare(std::string& img_path, std::string& img_path_2)
 	return { VAO, 0, VBO, 0, EBO, 0, texture1, texture2};
 }
 
-extendedObjectIds bouncingLogo(std::string& logo_path)
+extendedObjectIds bouncingLogo(std::string logo_path)
 {
 	float vertices[] = {
 		-0.25f, -0.25f, 0.0f, // positions 1
