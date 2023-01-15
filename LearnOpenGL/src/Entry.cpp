@@ -33,7 +33,7 @@ struct shaderIds
 // General Shape Draws
 objectIds rainbowPentagon();
 objectIds drawTriangle();
-extendedObjectIds textureSquare(std::string img_path);
+extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -117,7 +117,7 @@ int main()
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
-	extendedObjectIds ids = textureSquare("resources/textures/brick_wall_texture.jpg");
+	extendedObjectIds ids = textureSquare("resources/textures/brick_wall_texture.jpg", "");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
