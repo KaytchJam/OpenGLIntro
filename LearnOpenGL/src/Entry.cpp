@@ -9,26 +9,16 @@
 #include <string>
 
 // basic vector struct for storing x, y, and z values
-struct basicVector3
-{
-	float x, y, z;
-};
+struct basicVector3 { float x, y, z; };
+struct basicVector2 { float x, y; };
 
 // just to make doing these exercises easier, returning a struct of all our object ids from each exercise
-struct objectIds 
-{
-	unsigned int vao1, vao2, vbo1, vbo2, ebo;
-};
+struct objectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo; };
+struct extendedObjectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo1, ebo2, txt1, txt2; };
+struct shaderIds { unsigned int program1, program2, program3; };
 
-struct extendedObjectIds
-{
-	unsigned int vao1, vao2, vbo1, vbo2, ebo1, ebo2, txt1, txt2;
-};
-
-struct shaderIds
-{
-	unsigned int program1, program2, program3;
-};
+basicVector2 addVector(basicVector2 v1, basicVector2 v2) { return { v1.x + v2.x, v1.y + v2.y }; }
+basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.x, scalar * v1.y }; }
 
 // General Shape Draws
 objectIds rainbowPentagon();
@@ -137,11 +127,13 @@ int main()
 	//GLCall(myShader.useShader());
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
-	const char* xOffset_s = "xOffset";
-	const char* yOffset_s = "yOffset";
-	myShader.useShader();
-	myShader.setUniform1f(xOffset_s, 0);
-	myShader.setUniform1f(yOffset_s, 0);
+	const char* offset_s = "offsets";
+	basicVector2 offsetV = { 0.0f, 0.0f };
+	basicVector2 addVec = { 0.01f, 0.01f };
+	float xOffset = 0.0f;
+	float yOffset = 0.0f;
+	float addX = 0.1f;
+	float addY = -0.1f;
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -200,10 +192,16 @@ int main()
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+		myShader.useShader();
+		myShader.setUniform2f(offset_s, offsetV.x, offsetV.y);
 
 		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		GLCall(glBindVertexArray(ids.vao1));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+		offsetV = addVector(offsetV, addVec);
+		if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
+		if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) addVec.y *= -1;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
