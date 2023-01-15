@@ -448,7 +448,7 @@ objectIds drawTriangle()
 	return { vao, 0, vbo, 0, 0 };
 }
 
-extendedObjectIds textureSquare(std::string img_path)
+extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 {
 
 	float vertices[] = {
@@ -506,6 +506,34 @@ extendedObjectIds textureSquare(std::string img_path)
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
+
+	unsigned int texture2;
+	if (img_path_2 != "")
+	{
+		// generating and binding new texture object
+		glGenTextures(1, &texture2);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+
+		// texture settings
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		int width2, height2, nrChannels2;
+		unsigned char* data2 = stbi_load(img_path_2.c_str(), &width2, &height2, &nrChannels2, 0);
+		if (data2)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		else
+		{
+			std::cout << "Failed to load texture 2" << std::endl;
+		}
+		stbi_image_free(data2);
+	}
+
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
