@@ -117,7 +117,8 @@ int main()
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
-	extendedObjectIds ids = textureSquare("resources/textures/brick_wall_texture.jpg", "");
+	std::string path_header = "resources/textures/";
+	extendedObjectIds ids = textureSquare(path_header + "brick_wall_texture.jpg", path_header + "awesomeface.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -131,6 +132,9 @@ int main()
 	float xOffset = 0.0f;
 	float add = 0.005f;
 
+	GLCall(myShader.useShader());
+	GLCall(myShader.setUniform1i("texture1", 0));
+	GLCall(myShader.setUniform1i("texture2", 0));
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
@@ -181,8 +185,9 @@ int main()
 		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
 
 		// TEXTURE EXERCISE
-		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		GLCall(myShader.useShader());
+		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
+
 		GLCall(glBindVertexArray(ids.vao1));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
