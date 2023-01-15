@@ -547,6 +547,19 @@ extendedObjectIds textureSquare(std::string& img_path, std::string& img_path_2)
 
 extendedObjectIds bouncingLogo(std::string& logo_path)
 {
+	float vertices[] = {
+		-0.25f, -0.25f, 0.0f, // positions 1
+		0.0f, 0.0f, // texture coords 1
+
+		0.25f, -0.25f, 0.0f, // positions 2
+		1.0f, 0.0f, // texture coords 2
+
+		0.25f, 0.25f, 0.0f, // positions 3
+		1.0f, 1.0f, // texture coords 3
+
+		-0.25f, 0.25f, 0.0f, // positions 4
+		0.0f, 1.0f, // texture coords 4
+	}
 	return {};
 }
 
