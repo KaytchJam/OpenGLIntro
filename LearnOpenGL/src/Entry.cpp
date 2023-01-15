@@ -134,7 +134,7 @@ int main()
 
 	GLCall(myShader.useShader());
 	GLCall(myShader.setUniform1i("texture1", 0));
-	GLCall(myShader.setUniform1i("texture2", 0));
+	GLCall(myShader.setUniform1i("texture2", 1));
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
@@ -185,8 +185,13 @@ int main()
 		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
 
 		// TEXTURE EXERCISE
-		GLCall(myShader.useShader());
+		GLCall(glActiveTexture(GL_TEXTURE0));
 		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
+		GLCall(glActiveTexture(GL_TEXTURE1));
+		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));
+
+		GLCall(myShader.useShader());
+		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 
 		GLCall(glBindVertexArray(ids.vao1));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
@@ -487,7 +492,8 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 	// texture coord attribute
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
+	
+	//glActiveTexture(GL_TEXTURE0);
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
@@ -512,8 +518,8 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 	}
 	stbi_image_free(data);
 
-	glActiveTexture(GL_TEXTURE1);
-	unsigned int texture2;
+	//glActiveTexture(GL_TEXTURE1);
+	unsigned int texture2 = 0;
 	if (img_path_2 != "")
 	{
 		// generating and binding new texture object
@@ -530,7 +536,7 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 		unsigned char* data2 = stbi_load(img_path_2.c_str(), &width2, &height2, &nrChannels2, 0);
 		if (data2)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else
