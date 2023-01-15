@@ -7,6 +7,7 @@
 #include "vendor/stb_image/stb_image.h"
 #include "ErrorHandler.h"
 #include <string>
+#include <math.h>
 
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
@@ -129,11 +130,7 @@ int main()
 	//GLCall(myShader.setUniform1i("texture2", 1));
 	const char* offset_s = "offsets";
 	basicVector2 offsetV = { 0.0f, 0.0f };
-	basicVector2 addVec = { 0.01f, 0.01f };
-	float xOffset = 0.0f;
-	float yOffset = 0.0f;
-	float addX = 0.1f;
-	float addY = -0.1f;
+	basicVector2 addVec = { 0.0f, 0.0f };
 
 	// the render loop
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
@@ -141,7 +138,7 @@ int main()
 		processInput(window); // handle user input
 
 		// RENDER COMMANDS ...
-		glClearColor(0x2D / RGB_CEIL, 0x19 / RGB_CEIL, 0x32 / RGB_CEIL, 1.0f);
+		glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//glUseProgram(shaderProgram);
@@ -198,6 +195,12 @@ int main()
 		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		GLCall(glBindVertexArray(ids.vao1));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+		int w, h;
+		glfwGetWindowSize(window, &w, &h);
+		addVec.x = copysign(1, addVec.x)  * ((float) w / (w * 144));
+		addVec.y = copysign(1, addVec.y) * ((float) h / (h * 169));
+		std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
 
 		offsetV = addVector(offsetV, addVec);
 		if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
