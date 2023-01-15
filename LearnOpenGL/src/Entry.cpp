@@ -113,14 +113,13 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/HorizontalOffset.shader", "resources/shaders/fragment/TextureOutFrag.shader");
+	Shader myShader("resources/shaders/vertex/TexPosUniform.shader", "resources/shaders/fragment/TexUniform.shader");
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
 	std::string path_header = "resources/textures/";
-	//extendedObjectIds ids = textureSquare(path_header + "brick_wall_texture.jpg", path_header + "awesomeface.png");
 	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
