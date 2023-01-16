@@ -131,7 +131,7 @@ int main()
 	//GLCall(myShader.setUniform1i("texture2", 1));
 	const char* offset_s = "offsets";
 	basicVector2 offsetV = { 0.0f, 0.0f };
-	basicVector2 addVec = { 0.0f, 0.0f };
+	basicVector2 velocity = { 0.0f, 0.0f };
 
 	// the render loop
 	int frame = 0;
@@ -203,13 +203,14 @@ int main()
 		if (frame % 5 == 0) {
 			int w, h;
 			glfwGetWindowSize(window, &w, &h);
-			addVec.x = (float)copysign(1, addVec.x) * ((float)w / (w * 144));
-			addVec.y = (float)copysign(1, addVec.y) * ((float)h / (h * 169));
+			velocity.x = (float)copysign(1, velocity.x) * ((float)w / (w * 108));
+			velocity.y = (float)copysign(1, velocity.y) * ((float)h / (h * 120));
+			std::printf("winodw width: %d, height: %d\n", w, h);
 			//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
 
-			offsetV = addVector(offsetV, addVec);
-			if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
-			if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) addVec.y *= -1;
+			offsetV = addVector(offsetV, velocity);
+			if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) velocity.x *= -1;
+			if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) velocity.y *= -1;
 			frame = 1;
 		}
 
