@@ -134,9 +134,11 @@ int main()
 	basicVector2 addVec = { 0.0f, 0.0f };
 
 	// the render loop
+	int frame = 0;
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
+		frame++;
 
 		// RENDER COMMANDS ...
 		glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
@@ -186,10 +188,11 @@ int main()
 		//GLCall(glActiveTexture(GL_TEXTURE0));
 		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		//GLCall(glActiveTexture(GL_TEXTURE1));
-		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));
+		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));-
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
 		myShader.useShader();
 		myShader.setUniform2f(offset_s, offsetV.x, offsetV.y);
 
@@ -197,15 +200,18 @@ int main()
 		GLCall(glBindVertexArray(ids.vao1));
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
-		int w, h;
-		glfwGetWindowSize(window, &w, &h);
-		addVec.x = copysign(1, addVec.x)  * ((float) w / (w * 144));
-		addVec.y = copysign(1, addVec.y) * ((float) h / (h * 169));
-		//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
+		if (frame % 5 == 0) {
+			int w, h;
+			glfwGetWindowSize(window, &w, &h);
+			addVec.x = (float)copysign(1, addVec.x) * ((float)w / (w * 144));
+			addVec.y = (float)copysign(1, addVec.y) * ((float)h / (h * 169));
+			//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
 
-		offsetV = addVector(offsetV, addVec);
-		if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
-		if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) addVec.y *= -1;
+			offsetV = addVector(offsetV, addVec);
+			if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) addVec.x *= -1;
+			if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) addVec.y *= -1;
+			frame = 1;
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -446,7 +452,7 @@ objectIds exercise3()
 objectIds drawTriangle()
 {
 	basicVector3 vertices[] = {
-		{0.0f, 0.25f, 0.0f},
+		{0.0f, 0.25f, 0.0f}, // top of triangle
 		{0.25f, 0.0f, 0.0f},
 		{-0.25f, 0.0f, 0.0f}
 	};
@@ -473,6 +479,7 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
 {
 
 	float vertices[] = {
+	// [ Positions     (3)][ Colors      (3)][ Texture Postion (2)]
 		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 
 		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 
