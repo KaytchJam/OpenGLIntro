@@ -130,10 +130,9 @@ int main()
 	//GLCall(myShader.useShader());
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
+
 	const char* offset_s = "offsets";
 	basicVector2 offsetV = { 0.0f, 0.0f };
-
-
 	
 	srand(time(0));
 	basicVector2 velocity = { rand() % 2 - 1 , rand() % 2 - 1 };
