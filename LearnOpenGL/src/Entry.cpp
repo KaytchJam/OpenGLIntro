@@ -8,6 +8,7 @@
 #include "ErrorHandler.h"
 #include <string>
 #include <math.h>
+#include <time.h>
 
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
@@ -131,7 +132,12 @@ int main()
 	//GLCall(myShader.setUniform1i("texture2", 1));
 	const char* offset_s = "offsets";
 	basicVector2 offsetV = { 0.0f, 0.0f };
-	basicVector2 velocity = { 0.0f, 0.0f };
+
+
+	
+	srand(time(0));
+	basicVector2 velocity = { rand() % 2 - 1 , rand() % 2 - 1 };
+	std::printf("starting velocity.x - %f,\nstarting velocity.y - %f\n", velocity.x, velocity.y);
 
 	// the render loop
 	int frame = 0;
@@ -205,7 +211,7 @@ int main()
 			glfwGetWindowSize(window, &w, &h);
 			velocity.x = (float)copysign(1, velocity.x) * ((float)w / (w * 108));
 			velocity.y = (float)copysign(1, velocity.y) * ((float)h / (h * 120));
-			std::printf("winodw width: %d, height: %d\n", w, h);
+			//std::printf("window width: %d, height: %d\n", w, h);
 			//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
 
 			offsetV = addVector(offsetV, velocity);
