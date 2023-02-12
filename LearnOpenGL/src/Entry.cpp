@@ -10,6 +10,10 @@
 #include <math.h>
 #include <time.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
 struct basicVector2 { float x, y; };
@@ -24,9 +28,8 @@ basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.
 
 // General Shape Draws
 objectIds rainbowPentagon();
-objectIds drawTriangle();
+extendedObjectIds drawTriangle(float r, float g, float b);
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
-extendedObjectIds drawGrid();
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -106,14 +109,16 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/TexPosUniform.shader", "resources/shaders/fragment/TexUniform.shader");
+	Shader myShader("resources/shaders/vertex/MatrixTransform.shader", "resources/shaders/fragment/TexUniform.shader");
+	myShader.setUniform1b("textureSupplied", 0);
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
-	std::string path_header = "resources/textures/";
-	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
+	//std::string path_header = "resources/textures/";
+	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
+	extendedObjectIds ids = drawTriangle(255.0f, 0.0f, 0.0f);
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -130,13 +135,12 @@ int main()
 	//GLCall(myShader.useShader());
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
+	glm::vec4 v(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+	myShader.setUniformMatrix4fv("transform", 1, trans);
 
-	const char* offset_s = "offsets";
-	basicVector2 offsetV = { 0.0f, 0.0f };
-	
-	srand(time(0));
-	basicVector2 velocity = { rand() % 2 - 1 , rand() % 2 - 1 };
-	std::printf("starting velocity.x - %f,\nstarting velocity.y - %f\n", velocity.x, velocity.y);
 
 	// the render loop
 	int frame = 0;
@@ -197,27 +201,9 @@ int main()
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-
 		myShader.useShader();
-		myShader.setUniform2f(offset_s, offsetV.x, offsetV.y);
-
-		GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
-		GLCall(glBindVertexArray(ids.vao1));
-		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-
-		if (frame % 5 == 0) {
-			int w, h;
-			glfwGetWindowSize(window, &w, &h);
-			velocity.x = (float)copysign(1, velocity.x) * ((float)w / (w * 144));
-			velocity.y = (float)copysign(1, velocity.y) * ((float)h / (h * 168));
-			//std::printf("window width: %d, height: %d\n", w, h);
-			//std::printf("addX: %f addY:%f\n", addVec.x, addVec.y);
-
-			offsetV = addVector(offsetV, velocity);
-			if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) velocity.x *= -1;
-			if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) velocity.y *= -1;
-			frame = 1;
-		}
+		glBindVertexArray(ids.vao1);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -455,12 +441,15 @@ objectIds exercise3()
 	return {vaos[0], vaos[1], vbos[0], vbos[1], 0};
 }
 
-objectIds drawTriangle()
+extendedObjectIds drawTriangle(float r, float g, float b)
 {
 	basicVector3 vertices[] = {
-		{0.0f, 0.25f, 0.0f}, // top of triangle
+		{0.0f, 0.25f, 0.0f}, // FIRST 3, TRIANGLE VERTICES
 		{0.25f, 0.0f, 0.0f},
-		{-0.25f, 0.0f, 0.0f}
+		{-0.25f, 0.0f, 0.0f},
+		{r / 255, 0.0f, 0.0f},
+		{0.0f, g / 255, 0.0f},
+		{0.0f, 0.0f, b / 255}
 	};
 
 	unsigned int vao, vbo;
@@ -472,13 +461,15 @@ objectIds drawTriangle()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), NULL);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(basicVector3), (void*)(3 * sizeof(basicVector3)));
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	allErrorsFound();
 
-	return { vao, 0, vbo, 0, 0 };
+	return { vao, 0, vbo, 0, 0, 0, 0, 0};
 }
 
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2)
@@ -642,10 +633,5 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 
 	std::cout << "leaving bouncingLogo" << std::endl;
 	return {VAO, 0, VBO, 0, EBO, 0, texture1, 0};
-}
-
-extendedObjectIds drawGrid() 
-{
-	return {};
 }
 

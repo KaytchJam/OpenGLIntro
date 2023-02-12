@@ -100,10 +100,12 @@ void Shader::setUniform1f(const std::string& name, float v0) { glUniform1f(getUn
 void Shader::setUniform2f(const std::string& name, float v0, float v1) { glUniform2f(getUniformLocation(name), v0, v1); }
 void Shader::setUniform3f(const std::string& name, float v0, float v1, float v2) { glUniform3f(getUniformLocation(name), v0, v1, v2); }
 void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3) { glUniform4f(getUniformLocation(name), v0, v1, v2, v3); }
+void Shader::setUniformMatrix4fv(const std::string& name, int num_matrices, glm::mat4& mat) { glUniformMatrix4fv(getUniformLocation(name), num_matrices, GL_FALSE, glm::value_ptr(mat)); }
 
 // INTEGER UNIFORMS
 void Shader::setUniform1i(const std::string& name, int v0) { glUniform1i(getUniformLocation(name), v0); }
 // BOOLEAN UNIFORMS
+void Shader::setUniform1b(const std::string& name, bool b0) { glUniform1i(getUniformLocation(name), b0); }
 // UNSIGNED INT UNIFORMS
 
 int Shader::getUniformLocation(const std::string& uniform_name)
@@ -111,7 +113,6 @@ int Shader::getUniformLocation(const std::string& uniform_name)
 	std::unordered_map<std::string, int>::iterator myIt = uniformLocationCache.find(uniform_name);
 	if (myIt != uniformLocationCache.end()) 
 	{
-		//std::cout << "Uniform already in the cache! Nice!" << std::endl;
 		return myIt->second; // quick uniform location retrieval
 	}
 

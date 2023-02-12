@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include <string>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 struct shaderCode { const std::string vertexSourceCode, fragmentSourceCode; };
 
 // each shader object will represent an instance of a "shader program"
@@ -29,8 +33,11 @@ public:
 	void setUniform2f(const std::string& uniform_name, float v0, float v1);
 	void setUniform3f(const std::string& uniform_name, float v0, float v1, float v2);
 	void setUniform4f(const std::string& uniform_name, float v0, float v1, float v2, float v3);
+	void setUniformMatrix4fv(const std::string& uniform_name, int num_matrices, glm::mat4& mat);
 	// integers
 	void setUniform1i(const std::string& uniform_name, int v0);
+	// boold
+	void setUniform1b(const std::string& uniform_name, bool b0);
 
 private:
 	// a cache that'll store all our uniform locations

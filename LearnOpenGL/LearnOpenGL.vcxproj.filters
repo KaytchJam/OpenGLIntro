@@ -54,5 +54,9 @@
     <None Include="resources\shaders\fragment\TextureOutFrag.shader" />
     <None Include="resources\shaders\vertex\TexPosUniform.shader" />
     <None Include="resources\shaders\fragment\TexUniform.shader" />
+    <None Include="resources\shaders\vertex\MatrixTransform.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\tests\bouncing_logo_code.txt" />
   </ItemGroup>
 </Project>

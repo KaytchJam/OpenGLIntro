@@ -154,12 +154,16 @@
     <None Include="resources\shaders\fragment\PositionColor.shader" />
     <None Include="resources\shaders\fragment\TextureOutFrag.shader" />
     <None Include="resources\shaders\fragment\TexUniform.shader" />
+    <None Include="resources\shaders\vertex\MatrixTransform.shader" />
     <None Include="resources\shaders\vertex\TexPosUniform.shader" />
     <None Include="resources\shaders\vertex\TextureOutVert.shader" />
     <None Include="resources\shaders\vertex\HorizontalOffset.shader" />
     <None Include="resources\shaders\vertex\NoTransformation.shader" />
     <None Include="resources\shaders\fragment\ColorRed.shader" />
     <None Include="resources\shaders\vertex\UpsideDown.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\tests\bouncing_logo_code.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
