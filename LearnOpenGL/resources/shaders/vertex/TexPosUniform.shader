@@ -7,7 +7,7 @@ out vec2 tCoords;
 uniform vec2 offsets;
 
 // adds a vec2 offset to our vec3 positions
-vec2 addOffset(vec3 positions, vec2 offsets) {
+vec2 addOffset(in vec3 positions, in vec2 offsets) {
 	vec2 translated = vec2(positions.x + offsets.x, positions.y + offsets.y);
 	return translated;
 }
