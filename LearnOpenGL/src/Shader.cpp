@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "ErrorHandler.h"
 
 static void errorCheck(unsigned int shader_obj, int success, char *infoLog, const char * type)
 {

@@ -109,16 +109,24 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/MatrixTransform.shader", "resources/shaders/fragment/TexUniform.shader");
-	myShader.setUniform1b("textureSupplied", 0);
+	Shader myShader("resources/shaders/vertex/TexPosUniform.shader", "resources/shaders/fragment/TexUniform.shader");
+	myShader.useShader();
+	const char* offs = "offsets";
+	myShader.setUniform2f(offs, 0.0f, 0.0f);
+	glm::vec4 v(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+	const char* form = "transform";
+	myShader.setUniformMatrix4fv(form, 1, trans);
+	//myShader.setUniform1b("textureSupplied", false);
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
-	//std::string path_header = "resources/textures/";
-	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
-	extendedObjectIds ids = drawTriangle(255.0f, 0.0f, 0.0f);
+	std::string path_header = "resources/textures/";
+	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -135,11 +143,6 @@ int main()
 	//GLCall(myShader.useShader());
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
-	glm::vec4 v(1.0f, 0.0f, 0.0f, 1.0f);
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-	myShader.setUniformMatrix4fv("transform", 1, trans);
 
 
 	// the render loop
@@ -201,9 +204,9 @@ int main()
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-		myShader.useShader();
+		glBindTexture(GL_TEXTURE_2D, ids.txt1);
 		glBindVertexArray(ids.vao1);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)

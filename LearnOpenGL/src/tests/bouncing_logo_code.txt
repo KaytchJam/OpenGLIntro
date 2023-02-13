@@ -105,31 +105,15 @@ int main()
 	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	//std::string shaderPath("resources/shaders/");
 	Shader myShader("resources/shaders/vertex/TexPosUniform.shader", "resources/shaders/fragment/TexUniform.shader");
 	const float RGB_CEIL = 255;
-
-	//objectIds ids = rainbowPentagon();
-	//objectIds ids = exercise3();
-	//objectIds ids = drawTriangle();
 	std::string path_header = "resources/textures/";
 	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
-	//glEnable(GL_CULL_FACE); 
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CCW);
 	
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
 
-	///float xOffset = 0.0f;
-	///float add = 0.005f;
-
-	//GLCall(myShader.useShader());
-	//GLCall(myShader.setUniform1i("texture1", 0));
-	//GLCall(myShader.setUniform1i("texture2", 1));
 
 	const char* offset_s = "offsets";
 	basicVector2 offsetV = { 0.0f, 0.0f };
