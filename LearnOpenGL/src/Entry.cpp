@@ -109,10 +109,10 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/TexPosUniform.shader", "resources/shaders/fragment/TexUniform.shader");
+	Shader myShader("resources/shaders/vertex/ScaleRotate.shader", "resources/shaders/fragment/TexUniform.shader");
 	myShader.useShader();
-	const char* offs = "offsets";
-	myShader.setUniform2f(offs, 0.0f, 0.0f);
+	//const char* offs = "offsets";
+	//myShader.setUniform2f(offs, 0.0f, 0.0f);
 	glm::vec4 v(1.0f, 0.0f, 0.0f, 1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);
 	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
