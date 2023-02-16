@@ -109,7 +109,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/ScaleRotate.shader", "resources/shaders/fragment/TexUniform.shader");
+	Shader myShader("resources/shaders/vertex/TexTransform.shader", "resources/shaders/fragment/TexUniform.shader");
 	myShader.useShader();
 	//const char* offs = "offsets";
 	//myShader.setUniform2f(offs, 0.0f, 0.0f);
