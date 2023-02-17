@@ -152,6 +152,11 @@ int main()
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
 
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 orpheus = glm::ortho(0.0f,(float) PROJECT_LENGTH, (float) PROJECT_HEIGHT, 100.0f);
+	printMat4(orpheus);
+
 
 	// the render loop
 	glm::mat4 trans = glm::mat4(1.0f);
@@ -166,69 +171,10 @@ int main()
 		glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//glUseProgram(shaderProgram);
-
-		// DRAW PENTAGON 
-		//glBindVertexArray(ids.vao);
-		//glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
-
-		// DRAW PENTAGON, ORIGINAL
-		/*glBindVertexArray(vertexArrayObj);
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);*/
-
-		// EXERCISE ONE
-		//glBindVertexArray(ids.vao1);
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		// EXERCISE TWO
-		//glBindVertexArray(ids.vao1);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		//glBindVertexArray(ids.vao2);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		// EXERCISE THREE
-		/*glUseProgram(redProgram);
-		glBindVertexArray(ids.vao1);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glUseProgram(yellowProgram);
-		glBindVertexArray(ids.vao2);
-		glDrawArrays(GL_TRIANGLES, 0, 3);*/
-
-		// Flip triangle upside down exercise
-		//horiShader.useShader();
-		//horiShader.setUniform1f("xOffset", xOffset);
-		//horiShader.setUniform1f("yOffset", 0);
-		//horiShader.setUniform4f("aColor", 1.0f, 0.0f, 0.0f, 1.0f);
-		//glBindVertexArray(ids.vao1);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		//xOffset += add;
-		//if (xOffset + 0.25f >= 1.0f || xOffset - 0.25f <= -1.0f) add *= -1;
-
-		// TEXTURE EXERCISE
-		//GLCall(glActiveTexture(GL_TEXTURE0));
-		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
-		//GLCall(glActiveTexture(GL_TEXTURE1));
-		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));-d
-		//GLCall(myShader.useShader());
-		//GLCall(glBindVertexArray(ids.vao1));
-		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 		myShader.useShader();
 		trans = glm::rotate(trans, (float) glm::radians(0.1f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
 		glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
-		//trans = glm::translate(trans, glm::vec3(xOffset, 0.0f, 0.0f));
 		myShader.setUniformMatrix4fv("transform", 1, moved);
-		//vec = trans * vec;
-
-		/*if (trans[3].x < -1 || trans[3].x > 1) {
-			xOffset *= -1;
-		}*/
-
-		if (frame < 5) {
-			std::printf("FRAME %d\n", frame);
-			printMat4(trans);
-		}
 
 		glBindTexture(GL_TEXTURE_2D, ids.txt1);
 		glBindVertexArray(ids.vao1);
