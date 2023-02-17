@@ -10,8 +10,8 @@ uniform mat4 model = mat4(1.0);
 uniform mat4 view = mat4(1.0);
 uniform mat4 projection = mat4(1.0);
 
-vec4 normalize_coords(in vec4 vertices) {
-	return projection * view * model * vertices;
+vec4 normalize_coords(in vec4 verts) {
+	return projection * view * model * verts;
 }
 
 void main() {
