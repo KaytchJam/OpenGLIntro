@@ -21,6 +21,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+int TARGET_FPS = 30;
+
 
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
@@ -38,6 +40,7 @@ basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.
 objectIds rainbowPentagon();
 extendedObjectIds drawTriangle(float r, float g, float b);
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
+extendedObjectIds drawDroplet(std::string img_path);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -134,7 +137,8 @@ int main()
 	//objectIds ids = exercise3();
 	//objectIds ids = drawTriangle();
 	std::string path_header = "resources/textures/";
-	extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
+	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
+	extendedObjectIds ids = drawDroplet(path_header + "water_droplet.png");
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -152,44 +156,43 @@ int main()
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
 
-	glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)PROJECT_LENGTH / PROJECT_HEIGHT, 0.1f, 100.0f);
+	//glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	//glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)PROJECT_LENGTH / PROJECT_HEIGHT, 0.1f, 100.0f);
 	//glm::mat4 orpheus = glm::ortho(0.0f,(float) PROJECT_LENGTH, (float) PROJECT_HEIGHT, 100.0f);
 	//printMat4(orpheus);
 
 	// the render loop
 	glm::mat4 trans = glm::mat4(1.0f);
 	float xOffset = 0.005f;
-	int frame = 0;
+	double lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
-		frame++;
 
-		// RENDER COMMANDS ...
-		glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		while (glfwGetTime() < lastTime + 1.0/TARGET_FPS) {
 
-		myShader.useShader();
-		trans = glm::rotate(trans, (float) glm::radians(0.1f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
-		glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
-		myShader.setUniformMatrix4fv("transform", 1, moved);
-		myShader.setUniformMatrix4fv("view", 1, view);
-		myShader.setUniformMatrix4fv("model", 1, model);
-		myShader.setUniformMatrix4fv("projection", 1, projection);
+			// RENDER COMMANDS ...
+			glClearColor(0x2E / RGB_CEIL, 0xCC / RGB_CEIL, 0xFF / RGB_CEIL, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
 
-		glBindTexture(GL_TEXTURE_2D, ids.txt1);
-		glBindVertexArray(ids.vao1);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			myShader.useShader();
+			trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
+			//glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
+			myShader.setUniformMatrix4fv("transform", 1, trans);
+			//myShader.setUniformMatrix4fv("view", 1, view);
+			//myShader.setUniformMatrix4fv("model", 1, model);
+			//myShader.setUniformMatrix4fv("projection", 1, projection);
 
-		moved = glm::translate(trans, glm::vec3( cos(glfwGetTime() / 100) / -3,  sin(glfwGetTime() / 100) / -3, 0.0f));
-		myShader.setUniformMatrix4fv("transform", 1, moved);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glBindTexture(GL_TEXTURE_2D, ids.txt1);
+			glBindVertexArray(ids.vao1);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		glfwSwapBuffers(window);
-		glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
-		allErrorsFound(); // errors found during each iteration
+			glfwSwapBuffers(window);
+			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
+			allErrorsFound(); // errors found during each iteration
+		}
+		lastTime += 1.0 / TARGET_FPS;
 	}
 
 	// deleting to avoid memory leaks
@@ -615,5 +618,84 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 
 	std::cout << "leaving bouncingLogo" << std::endl;
 	return {VAO, 0, VBO, 0, EBO, 0, texture1, 0};
+}
+
+extendedObjectIds drawDroplet(std::string img_path) {
+	float vertices[] = {
+		-0.25f, -0.50f, 0.0f, // positions 1
+		0.0f, 0.0f, // texture coords 1
+
+		0.25f, -0.50f, 0.0f, // positions 2
+		1.0f, 0.0f, // texture coords 2
+
+		0.25f, 0.50f, 0.0f, // positions 3
+		1.0f, 1.0f, // texture coords 3
+
+		-0.25f, 0.50f, 0.0f, // positions 4
+		0.0f, 1.0f, // texture coords 4
+	};
+
+	unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
+
+	unsigned int VAO, VBO, EBO;
+
+	// Gen Vertex Array
+	GLCall(glGenVertexArrays(1, &VAO));
+	glBindVertexArray(VAO);
+
+	// Buffers in use
+	GLCall(glGenBuffers(1, &VBO));
+	GLCall(glGenBuffers(1, &EBO));
+
+	// Vertex Data
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, NULL));
+	GLCall(glEnableVertexAttribArray(0));
+
+	// Element Buffer Data
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+	// Texture coord data
+	GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float))));
+	GLCall(glEnableVertexAttribArray(1));
+
+	unsigned int texture1;
+	GLCall(glGenTextures(1, &texture1));
+	GLCall(glBindTexture(GL_TEXTURE_2D, texture1));
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	//std::cout << "IMAGE LOADING" << std::endl;
+	stbi_set_flip_vertically_on_load(true);
+	int width, height, nr_channels;
+	unsigned char* img_data = stbi_load(img_path.c_str(), &width, &height, &nr_channels, 0);
+	if (img_data) {
+		std::printf("number of channels: %d\n", nr_channels);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	//std::cout << "FREEING IMAGE" << std::endl;
+	stbi_image_free(img_data);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// allows for use of alpha channel / transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	std::cout << "leaving water droplet" << std::endl;
+	return { VAO, 0, VBO, 0, EBO, 0, texture1, 0 };
 }
 

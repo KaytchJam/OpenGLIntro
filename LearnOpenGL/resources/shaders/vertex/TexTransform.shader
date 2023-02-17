@@ -11,6 +11,7 @@ uniform mat4 view = mat4(1.0);
 uniform mat4 projection = mat4(1.0);
 
 vec4 normalize_coords(in vec4 verts) {
+	// will give a 2D view if no uniforms set
 	return projection * view * model * verts;
 }
 
