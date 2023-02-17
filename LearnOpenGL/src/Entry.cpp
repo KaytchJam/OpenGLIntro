@@ -152,11 +152,11 @@ int main()
 	//GLCall(myShader.setUniform1i("texture1", 0));
 	//GLCall(myShader.setUniform1i("texture2", 1));
 
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 orpheus = glm::ortho(0.0f,(float) PROJECT_LENGTH, (float) PROJECT_HEIGHT, 100.0f);
-	printMat4(orpheus);
-
+	glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)PROJECT_LENGTH / PROJECT_HEIGHT, 0.1f, 100.0f);
+	//glm::mat4 orpheus = glm::ortho(0.0f,(float) PROJECT_LENGTH, (float) PROJECT_HEIGHT, 100.0f);
+	//printMat4(orpheus);
 
 	// the render loop
 	glm::mat4 trans = glm::mat4(1.0f);
@@ -175,6 +175,9 @@ int main()
 		trans = glm::rotate(trans, (float) glm::radians(0.1f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
 		glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
 		myShader.setUniformMatrix4fv("transform", 1, moved);
+		myShader.setUniformMatrix4fv("view", 1, view);
+		myShader.setUniformMatrix4fv("model", 1, model);
+		myShader.setUniformMatrix4fv("projection", 1, projection);
 
 		glBindTexture(GL_TEXTURE_2D, ids.txt1);
 		glBindVertexArray(ids.vao1);
