@@ -154,6 +154,7 @@
     <None Include="resources\shaders\fragment\PositionColor.shader" />
     <None Include="resources\shaders\fragment\TextureOutFrag.shader" />
     <None Include="resources\shaders\fragment\TexUniform.shader" />
+    <None Include="resources\shaders\vertex\NoTexTransform.shader" />
     <None Include="resources\shaders\vertex\TexTransform.shader" />
     <None Include="resources\shaders\vertex\MatrixTransform.shader" />
     <None Include="resources\shaders\vertex\TexPosUniform.shader" />

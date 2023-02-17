@@ -4,7 +4,7 @@ layout(location = 0) in vec3 positions;
 layout(location = 1) in vec2 texCoords;
 
 out vec2 tCoords;
-uniform mat4 transform;
+uniform mat4 transform = mat4(1.0); // identity matrix by default
 
 void main() {
 	gl_Position = transform * vec4(positions, 1.0f);

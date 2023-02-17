@@ -3,16 +3,24 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Shader.h"
+// IMAGE / TEXTURE FUNCTIONALITY
 #include "vendor/stb_image/stb_image.h"
+
+// My additions
+#include "Shader.h"
 #include "ErrorHandler.h"
+
+// C/C++ Standard Library
 #include <string>
 #include <math.h>
 #include <time.h>
+#include <cmath>
 
+// GLM MATRIX MATH
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
@@ -73,6 +81,16 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void printMat4(glm::mat4& myMat) 
+{
+	std::printf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n",
+		myMat[0].x, myMat[1].x, myMat[2].x, myMat[3].x,
+		myMat[0].y, myMat[1].y, myMat[2].y, myMat[3].y,
+		myMat[0].z, myMat[1].z, myMat[2].z, myMat[3].z,
+		myMat[0].w, myMat[1].w, myMat[2].w, myMat[3].w);
+	std::cout << std::endl;
+}
+
 int main()
 {
 
@@ -110,16 +128,6 @@ int main()
 
 	//std::string shaderPath("resources/shaders/");
 	Shader myShader("resources/shaders/vertex/TexTransform.shader", "resources/shaders/fragment/TexUniform.shader");
-	myShader.useShader();
-	//const char* offs = "offsets";
-	//myShader.setUniform2f(offs, 0.0f, 0.0f);
-	glm::vec4 v(1.0f, 0.0f, 0.0f, 1.0f);
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-	const char* form = "transform";
-	myShader.setUniformMatrix4fv(form, 1, trans);
-	//myShader.setUniform1b("textureSupplied", false);
 	const float RGB_CEIL = 255;
 
 	//objectIds ids = rainbowPentagon();
@@ -146,6 +154,8 @@ int main()
 
 
 	// the render loop
+	glm::mat4 trans = glm::mat4(1.0f);
+	float xOffset = 0.005f;
 	int frame = 0;
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
@@ -200,12 +210,32 @@ int main()
 		//GLCall(glActiveTexture(GL_TEXTURE0));
 		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt1));
 		//GLCall(glActiveTexture(GL_TEXTURE1));
-		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));-
+		//GLCall(glBindTexture(GL_TEXTURE_2D, ids.txt2));-d
 		//GLCall(myShader.useShader());
 		//GLCall(glBindVertexArray(ids.vao1));
 		//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+		myShader.useShader();
+		trans = glm::rotate(trans, (float) glm::radians(0.1f), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate on z axis
+		glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
+		//trans = glm::translate(trans, glm::vec3(xOffset, 0.0f, 0.0f));
+		myShader.setUniformMatrix4fv("transform", 1, moved);
+		//vec = trans * vec;
+
+		/*if (trans[3].x < -1 || trans[3].x > 1) {
+			xOffset *= -1;
+		}*/
+
+		if (frame < 5) {
+			std::printf("FRAME %d\n", frame);
+			printMat4(trans);
+		}
+
 		glBindTexture(GL_TEXTURE_2D, ids.txt1);
 		glBindVertexArray(ids.vao1);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		moved = glm::translate(trans, glm::vec3( cos(glfwGetTime() / 100) / -3,  sin(glfwGetTime() / 100) / -3, 0.0f));
+		myShader.setUniformMatrix4fv("transform", 1, moved);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
