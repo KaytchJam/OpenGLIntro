@@ -11,3 +11,23 @@ bool glLogCall(const char* function, const char* file, int line) {
     }
     return true;
 }
+
+void allErrorsFound()
+{
+	GLenum current_error = glGetError();
+	while (current_error)
+	{
+		std::cout << "Error (" << current_error << ") found." << std::endl;
+		current_error = glGetError();
+	}
+}
+
+
+void shaderErrorCheck(int success, unsigned int shader_obj, char* infoLog)
+{
+	if (!success)
+	{
+		glGetShaderInfoLog(shader_obj, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+}

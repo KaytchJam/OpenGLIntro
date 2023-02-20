@@ -50,26 +50,6 @@ objectIds exercise3();
 // Messing Around / Testing
 extendedObjectIds bouncingLogo(std::string logo_path);
 
-void allErrorsFound() 
-{
-	GLenum current_error = glGetError();
-	while (current_error)
-	{
-		std::cout << "Error (" << current_error << ") found." << std::endl;
-		current_error = glGetError();
-	}
-}
-
-
-void errorCheck(int success, unsigned int shader_obj, char* infoLog) 
-{
-	if (!success)
-	{
-		glGetShaderInfoLog(shader_obj, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-}
-
 void processInput(GLFWwindow* window) 
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

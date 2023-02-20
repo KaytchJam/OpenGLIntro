@@ -9,3 +9,5 @@
 
 void glClearError();
 bool glLogCall(const char* function, const char* file, int line);
+void allErrorsFound();
+void shaderErrorCheck(int success, unsigned int shader_obj, char* infoLog);
