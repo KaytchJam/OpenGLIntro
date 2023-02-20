@@ -7,8 +7,8 @@
 #include "vendor/stb_image/stb_image.h"
 
 // My additions
-#include "Shader.h"
-#include "ErrorHandler.h"
+#include "gl_tools/Shader.h"
+#include "gl_tools/ErrorHandler.h"
 
 // C/C++ Standard Library
 #include <string>

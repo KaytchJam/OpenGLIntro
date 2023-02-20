@@ -31,6 +31,6 @@ void main() {
     vec2 Coord = vec2(dx * floor(tCoords.x / dx), dy * floor(tCoords.y / dy));
 
     vec4 fragPre = texture(texture1, Coord);
-    if (scanlines == true) fragPre = makeScanlines(fragPre, 20, 2);
+    if (scanlines) fragPre = makeScanlines(fragPre, 20, 2);
     FragColor = fragPre;
 }
