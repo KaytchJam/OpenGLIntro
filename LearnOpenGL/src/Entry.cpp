@@ -130,12 +130,13 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/TexTransform.shader", "resources/shaders/fragment/TexUniform.shader");
+	Shader myShader("resources/shaders/vertex/TexTransform.shader", "resources/shaders/fragment/TexPixelation.shader");
 	const float RGB_CEIL = 255;
 
-	//objectIds ids = rainbowPentagon();
-	//objectIds ids = exercise3();
-	//objectIds ids = drawTriangle();
+	// enable scanline effect
+	myShader.useShader();
+	myShader.setUniform1b("scanlines", true);
+
 	std::string path_header = "resources/textures/";
 	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 	extendedObjectIds ids = drawDroplet(path_header + "water_droplet.png");
@@ -148,13 +149,6 @@ int main()
 	
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
-
-	///float xOffset = 0.0f;
-	///float add = 0.005f;
-
-	//GLCall(myShader.useShader());
-	//GLCall(myShader.setUniform1i("texture1", 0));
-	//GLCall(myShader.setUniform1i("texture2", 1));
 
 	//glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
@@ -185,7 +179,7 @@ int main()
 			//myShader.setUniformMatrix4fv("projection", 1, projection);
 
 			glBindTexture(GL_TEXTURE_2D, ids.txt1);
-			glBindVertexArray(ids.vao1);
+			glBindVertexArray(ids.vao1); 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 			glfwSwapBuffers(window);

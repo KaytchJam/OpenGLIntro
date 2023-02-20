@@ -57,6 +57,7 @@
     <None Include="resources\shaders\vertex\MatrixTransform.shader" />
     <None Include="resources\shaders\vertex\TexTransform.shader" />
     <None Include="resources\shaders\vertex\NoTexTransform.shader" />
+    <None Include="resources\shaders\fragment\TexPixelation.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\tests\bouncing_logo_code.txt" />

@@ -152,6 +152,7 @@
     <None Include="resources\shaders\fragment\ColorUniform.shader" />
     <None Include="resources\shaders\fragment\ColorYellow.shader" />
     <None Include="resources\shaders\fragment\PositionColor.shader" />
+    <None Include="resources\shaders\fragment\TexPixelation.shader" />
     <None Include="resources\shaders\fragment\TextureOutFrag.shader" />
     <None Include="resources\shaders\fragment\TexUniform.shader" />
     <None Include="resources\shaders\vertex\NoTexTransform.shader" />

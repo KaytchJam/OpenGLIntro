@@ -16,8 +16,8 @@ static void errorCheck(unsigned int shader_obj, int success, char *infoLog, cons
 Shader::Shader(const char *vertexFilePath, const char *fragmentFilePath) : program_ID(0)
 {
 	shaderCode sourceCodes = getShaderSourceCode(vertexFilePath, fragmentFilePath);
-	std::printf("Vertex Shader:\n%s\n\n", sourceCodes.vertexSourceCode.c_str());
-	std::printf("Fragment Shader:\n%s\n\n", sourceCodes.fragmentSourceCode.c_str());
+	std::printf("Vertex Shader: %s\n%s\n\n", vertexFilePath, sourceCodes.vertexSourceCode.c_str());
+	std::printf("Fragment Shader: %s\n%s\n\n", fragmentFilePath, sourceCodes.fragmentSourceCode.c_str());
 
 	int success;
 	char infoLog[512];
@@ -64,8 +64,8 @@ void Shader::useShader()
 // SHADER CREATION
 shaderCode Shader::getShaderSourceCode(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
-	std::cout << vertexFilePath << std::endl;
-	std::cout << fragmentFilePath << std::endl;
+	//std::cout << vertexFilePath << std::endl;
+	//std::cout << fragmentFilePath << std::endl;
 
 	std::string vertexCode, fragmentCode;
 	std::ifstream vShaderFile, fShaderFile;
