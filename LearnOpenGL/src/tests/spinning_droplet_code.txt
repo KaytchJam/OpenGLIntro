@@ -201,7 +201,6 @@ extendedObjectIds drawDroplet(std::string img_path) {
 	};
 
 	unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
-
 	unsigned int VAO, VBO, EBO;
 
 	// Gen Vertex Array
