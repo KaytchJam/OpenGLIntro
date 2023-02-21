@@ -45,7 +45,6 @@ namespace test {
 		m_Sh->UnBind();
 		m_VB->UnBind();
 		m_IB->UnBind();
-
 	}
 
 	TestDrawRect::~TestDrawRect() {

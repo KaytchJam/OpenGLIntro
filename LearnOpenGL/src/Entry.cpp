@@ -88,7 +88,7 @@ int main()
 	const int PROJECT_HEIGHT = 720;
 
 	// create window object
-	GLFWwindow* window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
 
 	// check for proper window creation
 	if (window == NULL)
