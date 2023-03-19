@@ -22,6 +22,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 int TARGET_FPS = 30;
+const float RGB_CEIL = 255;
 
 
 // basic vector struct for storing x, y, and z values
@@ -41,6 +42,7 @@ objectIds rainbowPentagon();
 extendedObjectIds drawTriangle(float r, float g, float b);
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
 extendedObjectIds drawDroplet(std::string img_path);
+extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -88,7 +90,7 @@ int main()
 	const int PROJECT_HEIGHT = 720;
 
 	// create window object
-	GLFWwindow *window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
 
 	// check for proper window creation
 	if (window == NULL)
@@ -110,16 +112,42 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//std::string shaderPath("resources/shaders/");
-	Shader myShader("resources/shaders/vertex/TexTransform.shader", "resources/shaders/fragment/TexPixelation.shader");
-	const float RGB_CEIL = 255;
+	Shader myShader("resources/shaders/vertex/NoTexTransform.shader", "resources/shaders/fragment/ColorUniform.shader");
 
 	// enable scanline effect
 	myShader.useShader();
-	myShader.setUniform1b("scanlines", true);
+	//myShader.setUniform1b("scanlines", true);
 
-	std::string path_header = "resources/textures/";
+	//std::string path_header = "resources/textures/";
 	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
-	extendedObjectIds ids = drawDroplet(path_header + "water_droplet.png");
+
+	glm::mat4 model(1.0f);
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(0.0f, -50.0f, 200.0f));
+	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
+
+	std::cout << "MODEL MATRIX" << std::endl;
+	printMat4(model);
+
+	std::cout << "PROJECTION MATRIX" << std::endl;
+	printMat4(proj);
+
+	//extendedObjectIds ids = drawDroplet(path_header + "water_droplet.png");
+
+	extendedObjectIds ids = drawPlane(
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 100.0f),
+		glm::vec3(0.0f, 100.0f, 100.0f),
+		glm::vec3(0.0f, 100.0f, 0.0f)
+	);
+
+	extendedObjectIds ids2 = drawPlane(
+		glm::vec3(-50.0f, -50.0f, 0.0f),
+		glm::vec3(-50.0f, 50.0f, 0.0f),
+		glm::vec3(50.0f, 50.0f, 0.0f),
+		glm::vec3(50.0f, -50.0f, 0.0f)
+	);
+
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
@@ -130,11 +158,10 @@ int main()
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
 
-	//glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	//glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)PROJECT_LENGTH / PROJECT_HEIGHT, 0.1f, 100.0f);
-	//glm::mat4 orpheus = glm::ortho(0.0f,(float) PROJECT_LENGTH, (float) PROJECT_HEIGHT, 100.0f);
-	//printMat4(orpheus);
+	// dealing with projections
+
+	myShader.setUniformMatrix4fv("model", 1, model);
+	myShader.setUniformMatrix4fv("projection", 1, proj);
 
 	// the render loop
 	glm::mat4 trans = glm::mat4(1.0f);
@@ -147,20 +174,25 @@ int main()
 		while (glfwGetTime() < lastTime + 1.0/TARGET_FPS) {
 
 			// RENDER COMMANDS ...
-			glClearColor(0x2E / RGB_CEIL, 0xCC / RGB_CEIL, 0xFF / RGB_CEIL, 1.0f);
+			glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			myShader.useShader();
-			trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
+			trans = glm::rotate(trans, (float)glm::radians(0.3f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
 			//glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
 			myShader.setUniformMatrix4fv("transform", 1, trans);
 			//myShader.setUniformMatrix4fv("view", 1, view);
 			//myShader.setUniformMatrix4fv("model", 1, model);
 			//myShader.setUniformMatrix4fv("projection", 1, projection);
 
-			glBindTexture(GL_TEXTURE_2D, ids.txt1);
-			glBindVertexArray(ids.vao1); 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			//glBindTexture(GL_TEXTURE_2D, ids.txt1);
+			myShader.setUniform1i("hex_color", 0xFF2419);
+			GLCall(glBindVertexArray(ids.vao1)); 
+			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+			myShader.setUniform1i("hex_color", 0xD32663);
+			GLCall(glBindVertexArray(ids2.vao1));
+			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
 			glfwSwapBuffers(window);
 			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -174,6 +206,9 @@ int main()
 	glDeleteBuffers(4, &ids.vbo1);
 	glDeleteTextures(2, &ids.txt1);
 
+	glDeleteVertexArrays(2, &ids.vao1);
+	glDeleteBuffers(4, &ids.vbo1);
+	glDeleteTextures(2, &ids.txt1);
 
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
@@ -592,6 +627,39 @@ extendedObjectIds bouncingLogo(std::string logo_path)
 
 	std::cout << "leaving bouncingLogo" << std::endl;
 	return {VAO, 0, VBO, 0, EBO, 0, texture1, 0};
+}
+
+extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4) {
+	float vertices[] = {
+		p1.x, p1.y, p1.z,
+		p2.x, p2.y, p2.z,
+		p3.x, p3.y, p3.z,
+		p4.x, p4.y, p4.z
+	};
+
+	unsigned int indices[] = {
+		0, 1, 2, 2, 3, 0
+	};
+
+	unsigned int vao, vbo, ebo;
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
+
+	GLCall(glGenBuffers(1, &vbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 3, NULL));
+	GLCall(glEnableVertexAttribArray(0));
+
+	GLCall(glGenBuffers(1, &ebo));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+	GLCall(glBindVertexArray(0));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+
+	return { vao, 0, vbo, 0, ebo, 0, 0, 0 };
 }
 
 extendedObjectIds drawDroplet(std::string img_path) {

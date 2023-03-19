@@ -30,6 +30,12 @@
     <ClCompile Include="src\gl_tools\ErrorHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SegmentedDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gl_tools\Shader.h">
@@ -41,11 +47,18 @@
     <ClInclude Include="src\gl_tools\ErrorHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SegmentedDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShapeMaker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\vertex\NoTransformation.shader" />
-    <None Include="resources\shaders\fragment\ColorYellow.shader" />
-    <None Include="resources\shaders\fragment\ColorRed.shader" />
     <None Include="resources\shaders\fragment\ColorUniform.shader" />
     <None Include="resources\shaders\vertex\UpsideDown.shader" />
     <None Include="resources\shaders\vertex\HorizontalOffset.shader" />

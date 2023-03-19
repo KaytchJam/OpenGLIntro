@@ -133,10 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\SegmentedDisplay.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\SegmentedDisplay.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

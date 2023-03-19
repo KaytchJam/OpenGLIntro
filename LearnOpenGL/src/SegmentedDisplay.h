@@ -8,7 +8,7 @@
 
 static const int NUM_SEGMENTS = 7;
 
-static const enum SegmentType {
+const enum SegmentType {
     HORIZONTAL = 0,
     VERTICAL = 1
 };
@@ -29,8 +29,9 @@ static const int8_t sig_mappings[10] = {
 };
 
 struct sig_segment {
-    float x, y;
+    float offsetX, offsetY;
     bool on;
+    char symbol;
     SegmentType stype;
 };
 
@@ -38,13 +39,14 @@ class SegmentedDisplay {
 private:
     // RENDERING RELATED FIELDS:
     float originX, originY;
+    float length, height;
     int vtexture, htexture;
-    GLuint vao, vbo, ebo, shader;
+    Shader sh;
+    GLuint vao, vbo, ebo;
+
 
     // RENDERING RELATED FUNCTIONS
     void generateBuffers();
-    void generateShaders();
-    void generateTextures();
 
     // SEGMENT RELATED FIELDS
     uint8_t input = 0;
@@ -53,11 +55,12 @@ private:
     // SEGMENT RELATED FUNCTIONS
     void initialize_segments();
     void set_input(uint8_t in);
+    int get_input();
     void update_segments();
     void print_signals();
 
 public:
-    SegmentedDisplay(float x, float y, uint8_t input);
+    SegmentedDisplay(float x, float y, float areaLength, float areaHeight, const char * vs, const char *fs, uint8_t input);
     ~SegmentedDisplay();
 
     void onUpdate(float deltaTime);
