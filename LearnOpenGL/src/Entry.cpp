@@ -121,13 +121,21 @@ int main()
 	//std::string path_header = "resources/textures/";
 	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 
-	glm::mat4 model(1.0f);
-	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-	model = glm::translate(model, glm::vec3(0.0f, -50.0f, 200.0f));
+	glm::mat4 model1(1.0f);
+	model1 = glm::scale(model1, glm::vec3(2.0f, 2.0f, 2.0f));
+	glm::mat4 model2 = model1;
+
+	model1 = glm::translate(model1, glm::vec3(0.0f, -50.0f, 0.0f));
 	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
 
-	std::cout << "MODEL MATRIX" << std::endl;
-	printMat4(model);
+	glm::mat4 view = glm::lookAt(
+		glm::vec3(0.0f, 0.0f, 200.0f),
+		glm::vec3(0.0f, 100.0f, 0.0f),
+		glm::vec3(0.0f, 20.0f, 0.0f)
+	);
+
+	std::cout << "MODEL MATRIX 1" << std::endl;
+	printMat4(model1);
 
 	std::cout << "PROJECTION MATRIX" << std::endl;
 	printMat4(proj);
@@ -150,7 +158,7 @@ int main()
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	//glEnable(GL_CULL_FACE); 
 	//glCullFace(GL_BACK);
 	//glFrontFace(GL_CCW);
@@ -160,8 +168,9 @@ int main()
 
 	// dealing with projections
 
-	myShader.setUniformMatrix4fv("model", 1, model);
+	//myShader.setUniformMatrix4fv("model", 1, model);
 	myShader.setUniformMatrix4fv("projection", 1, proj);
+	myShader.setUniformMatrix4fv("view", 1, view);
 
 	// the render loop
 	glm::mat4 trans = glm::mat4(1.0f);
@@ -178,18 +187,17 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			myShader.useShader();
-			trans = glm::rotate(trans, (float)glm::radians(0.3f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
+			trans = glm::rotate(trans, (float)glm::radians(0.15f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on y axis
 			//glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
 			myShader.setUniformMatrix4fv("transform", 1, trans);
-			//myShader.setUniformMatrix4fv("view", 1, view);
-			//myShader.setUniformMatrix4fv("model", 1, model);
-			//myShader.setUniformMatrix4fv("projection", 1, projection);
 
 			//glBindTexture(GL_TEXTURE_2D, ids.txt1);
+			myShader.setUniformMatrix4fv("model", 1, model1);
 			myShader.setUniform1i("hex_color", 0xFF2419);
 			GLCall(glBindVertexArray(ids.vao1)); 
 			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
+			myShader.setUniformMatrix4fv("model", 1, model2);
 			myShader.setUniform1i("hex_color", 0xD32663);
 			GLCall(glBindVertexArray(ids2.vao1));
 			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
