@@ -139,15 +139,18 @@ int main()
 		glm::vec3(0.0f, 20.0f, 0.0f)
 	);*/
 
-
-	std::vector<int> mat{ -5, 4, 3, 7, 2, 1, 6 };
+	std::vector<int> mat(1);
+	for (int i = 0; i < 20; i++) {
+		mat.push_back(i % 10);
+	}
+	//std::vector<int> mat{ 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	//int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
 	unsigned int SIZE = mat.size();
 	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE); 
 	glEnable(GL_DEPTH_TEST);
@@ -169,6 +172,8 @@ int main()
 	float xOffset = 0.005f;
 	double lastTime = glfwGetTime();
 	int kala = 0xA1F;
+	const float radius = 10.0f;
+	//glm::mat4(view);
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
@@ -182,12 +187,12 @@ int main()
 
 			myShader.useShader();
 
-			const float radius = 10.0f;
 			float camX = (float) sin(glfwGetTime()) * radius;
 			float camZ = (float) cos(glfwGetTime()) * radius;
 			glm::mat4 view;
-			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, -0.0), glm::vec3(0.0, 1.0, 0.0));
+			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
+			//view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
 
 			myShader.setUniformMatrix4fv("view", 1, view);
 
@@ -668,6 +673,60 @@ extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 
 	return { vao, 0, vbo, 0, ebo, 0, 0, 0 };
 }
 
+extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height) {
+	float vertices[] = {
+		// prism top
+		p1.x, p1.y, p1.z,
+		p2.x, p2.y, p2.z,
+		p3.x, p3.y, p3.z,
+		p4.x, p4.y, p4.z,
+
+		// prism bottom
+		p1.x, p1.y + height, p1.z,
+		p2.x, p2.y + height, p2.z,
+		p3.x, p2.y + height, p3.z,
+		p4.x, p4.y + height, p3.z
+	};
+
+	int indices[] = { 
+		0, 1, 2, 
+		2, 3, 0, // top
+
+		0, 4, 1, 
+		1, 5, 6, // side
+
+		6, 1, 2, 
+		2, 6, 7, // side
+
+		7, 2, 3, 
+		3, 7, 8, // side
+
+		8, 3, 0, 
+		0, 3, 4, // side
+
+		4, 5, 6, 
+		6, 7, 8 // bottom
+	};
+
+	unsigned int vao, vbo, ebo;
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL);
+	glEnableVertexAttribArray(0);
+
+	return { vao, 0, vbo, 0, ebo, 0, 0 };
+}
+
 extendedObjectIds drawDroplet(std::string img_path) {
 	float vertices[] = {
 		-0.25f, -0.50f, 0.0f, // positions 1
@@ -781,22 +840,23 @@ struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
 	assert(plane_list != NULL);
 
 	struct intVector2 minmax = get_max_and_min(mat, MAT_SIZE);
-	std::cout << "MIN: " << minmax.x << ", MAX: " << minmax.y << std::endl;
+	//std::cout << "MIN: " << minmax.x << ", MAX: " << minmax.y << std::endl;
 
 	unsigned int index = 0;
 	while (index < MAT_SIZE && index + 1 < MAT_SIZE) {
 		float normed_l = normalize_int(mat[index], minmax.x, minmax.y);
 		float normed_r = normalize_int(mat[index + 1], minmax.x, minmax.y);
 
-		std::cout << "Index " << index << ", value: " << mat[index] << ", norm l: " << normed_l << std::endl;
-		std::cout << "Index " << index << ", value: " << mat[index] << ", norm r: " << normed_r << std::endl;
-		std::cout << std::endl;
+		//std::cout << "Index " << index << ", value: " << mat[index] << ", norm l: " << normed_l << std::endl;
+		//std::cout << "Index " << index << ", value: " << mat[index] << ", norm r: " << normed_r << std::endl;
+		//std::cout << std::endl;
 
-		struct extendedObjectIds temp = drawPlane(
+		struct extendedObjectIds temp = drawPrism(
 			glm::vec3(-1.0f, normed_l, 1.0f),
 			glm::vec3(-1.0f, normed_l, -1.0f),
 			glm::vec3(1.0f, normed_r, -1.0f),
-			glm::vec3(1.0f, normed_r, 1.0f)
+			glm::vec3(1.0f, normed_r, 1.0f),
+			5.0
 		);
 
 		//plane_list[index] = temp;
