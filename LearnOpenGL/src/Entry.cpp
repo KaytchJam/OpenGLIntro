@@ -140,22 +140,24 @@ int main()
 		glm::vec3(0.0f, 20.0f, 0.0f)
 	);*/
 
-	std::vector<int> mat(1);
+	/*std::vector<int> mat(1);
 	for (int i = 0; i < 20; i++) {
 		mat.push_back(i % 10);
-	}
+	}*/
+	
 	//std::vector<int> mat{ 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+	std::vector<int> mat{ 4, 2, 1, 0, 5, 7, 8, 1, 5, 4, 3, 6, 4, 2 };
 	//int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
 	
-	extendedObjectIds id = drawPrism(
+	/*extendedObjectIds id = drawPrism(
 		glm::vec3(-1.0f, 0.0f, 1.0f),
 		glm::vec3(-1.0f, 0.0f, -1.0f),
 		glm::vec3(1.0f, 0.0f, -1.0f),
 		glm::vec3(1.0f, 0.0f, 1.0f),
-		1.0f
-	);
-	//unsigned int SIZE = mat.size();
-	//extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
+		0.5f
+	);*/
+	unsigned int SIZE = mat.size();
+	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
@@ -172,9 +174,9 @@ int main()
 	// dealing with projections
 	glm::mat4 model1(1.0f);
 	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
-	model1 = glm::scale(model1, glm::vec3(100.0f, 100.0f, 100.0f));
-	model1 = glm::rotate(model1, (float)glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//model1 = glm::scale(model1, glm::vec3(250.0f / SIZE, 250.0f / SIZE, 250.0f / SIZE));
+	//model1 = glm::scale(model1, glm::vec3(100.0f, 100.0f, 100.0f));
+	//model1 = glm::rotate(model1, (float)glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model1 = glm::scale(model1, glm::vec3(250.0f / ( 2 * SIZE ), 250.0f / ( 2 * SIZE), 250.0f / (2 * SIZE)));
 	myShader.setUniformMatrix4fv("model", 1, model1);
 	myShader.setUniformMatrix4fv("projection", 1, proj);
 	//myShader.setUniform1i("hex_color", 0xFF2419);
@@ -199,22 +201,22 @@ int main()
 
 			myShader.useShader();
 
-			trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
-			myShader.setUniformMatrix4fv("transform", 1, trans);
+			//trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 1.0f)); // rotate on y axis
+			//myShader.setUniformMatrix4fv("transform", 1, trans);
 
 
-			myShader.setUniform1b("hex_color", 0x0);
-			glBindVertexArray(id.vao1);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			//myShader.setUniform1b("hex_color", 0x0);
+			//glBindVertexArray(id.vao1);
+			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-			/*float camX = (float) sin(glfwGetTime()) * radius;
+			float camX = (float) sin(glfwGetTime()) * radius;
 			float camZ = (float) cos(glfwGetTime()) * radius;
 			glm::mat4 view;
 			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));*/
-			//view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
+			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
+			view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
 
-			/*myShader.setUniformMatrix4fv("view", 1, view);
+			myShader.setUniformMatrix4fv("view", 1, view);
 
 			for (unsigned int i = 0; i < SIZE - 1; i++) {
 				struct extendedObjectIds cur_id = plane_ids[i];
@@ -222,8 +224,8 @@ int main()
 				glm::mat4 shift = glm::translate(model1, glm::vec3(2 * i, 0, 0));
 				myShader.setUniformMatrix4fv("model", 1, shift);
 				GLCall(glBindVertexArray(cur_id.vao1));
-				GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-			}*/
+				GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0));
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -233,19 +235,19 @@ int main()
 
 	}
 
-	glDeleteVertexArrays(2, &id.vao1);
+	/*glDeleteVertexArrays(2, &id.vao1);
 	glDeleteBuffers(4, &id.vbo1);
-	glDeleteTextures(2, &id.txt1);
+	glDeleteTextures(2, &id.txt1);*/
 
 	// deleting to avoid memory leaks
-	/*for (unsigned int i = 0; i < SIZE; i++) {
+	for (unsigned int i = 0; i < SIZE; i++) {
 		extendedObjectIds cur_id = plane_ids[i];
 		glDeleteVertexArrays(2, &cur_id.vao1);
 		glDeleteBuffers(4, &cur_id.vbo1);
 		glDeleteTextures(2, &cur_id.txt1);
 	}
 
-	free(plane_ids);*/
+	free(plane_ids);
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
 }
@@ -885,7 +887,7 @@ struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
 			glm::vec3(-1.0f, normed_l, -1.0f),
 			glm::vec3(1.0f, normed_r, -1.0f),
 			glm::vec3(1.0f, normed_r, 1.0f),
-			5.0
+			1.0f
 		);
 
 		//plane_list[index] = temp;
