@@ -28,11 +28,18 @@ const float RGB_CEIL = 255;
 // basic vector struct for storing x, y, and z values
 struct basicVector3 { float x, y, z; };
 struct basicVector2 { float x, y; };
+struct intVector2 { int x, y; };
+
 
 // just to make doing these exercises easier, returning a struct of all our object ids from each exercise
 struct objectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo; };
 struct extendedObjectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo1, ebo2, txt1, txt2; };
 struct shaderIds { unsigned int program1, program2, program3; };
+
+struct plane_object {
+	float y;
+	struct extendedObjectIds data;
+};
 
 basicVector2 addVector(basicVector2 v1, basicVector2 v2) { return { v1.x + v2.x, v1.y + v2.y }; }
 basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.x, scalar * v1.y }; }
@@ -43,6 +50,7 @@ extendedObjectIds drawTriangle(float r, float g, float b);
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
 extendedObjectIds drawDroplet(std::string img_path);
 extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4);
+extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -121,45 +129,28 @@ int main()
 	//std::string path_header = "resources/textures/";
 	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
 
-	glm::mat4 model1(1.0f);
-	model1 = glm::scale(model1, glm::vec3(2.0f, 2.0f, 2.0f));
-	glm::mat4 model2 = model1;
+	//glm::mat4 model2 = model1;
 
-	model1 = glm::translate(model1, glm::vec3(0.0f, -50.0f, 0.0f));
-	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
+	//model1 = glm::translate(model1, glm::vec3(0.0f, -50.0f, 0.0f));
 
-	glm::mat4 view = glm::lookAt(
+	/*glm::mat4 view = glm::lookAt(
 		glm::vec3(0.0f, 0.0f, 200.0f),
 		glm::vec3(0.0f, 100.0f, 0.0f),
 		glm::vec3(0.0f, 20.0f, 0.0f)
-	);
+	);*/
 
-	std::cout << "MODEL MATRIX 1" << std::endl;
-	printMat4(model1);
 
-	std::cout << "PROJECTION MATRIX" << std::endl;
-	printMat4(proj);
 
-	//extendedObjectIds ids = drawDroplet(path_header + "water_droplet.png");
-
-	extendedObjectIds ids = drawPlane(
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 100.0f),
-		glm::vec3(0.0f, 100.0f, 100.0f),
-		glm::vec3(0.0f, 100.0f, 0.0f)
-	);
-
-	extendedObjectIds ids2 = drawPlane(
-		glm::vec3(-50.0f, -50.0f, 0.0f),
-		glm::vec3(-50.0f, 50.0f, 0.0f),
-		glm::vec3(50.0f, 50.0f, 0.0f),
-		glm::vec3(50.0f, -50.0f, 0.0f)
-	);
+	int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
+	unsigned int SIZE = 9;
+	extendedObjectIds* plane_ids = drawMatrixPlanes(mat, SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE); 
+	glEnable(GL_DEPTH);
 	//glCullFace(GL_BACK);
 	//glFrontFace(GL_CCW);
 	
@@ -167,15 +158,17 @@ int main()
 	std::cout << "about to enter the rendering loop" << std::endl;
 
 	// dealing with projections
-
-	//myShader.setUniformMatrix4fv("model", 1, model);
+	glm::mat4 model1(1.0f);
+	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
+	model1 = glm::scale(model1, glm::vec3(50.0f * SIZE / 2 / SIZE, 50.0f  * SIZE / 2 / SIZE, 50.0f * SIZE / 2 / SIZE));
 	myShader.setUniformMatrix4fv("projection", 1, proj);
-	myShader.setUniformMatrix4fv("view", 1, view);
+	myShader.setUniform1i("hex_color", 0xFF2419);
 
 	// the render loop
-	glm::mat4 trans = glm::mat4(1.0f);
+	//glm::mat4 trans = glm::mat4(1.0f);
 	float xOffset = 0.005f;
 	double lastTime = glfwGetTime();
+	int kala = 0xA1F;
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
@@ -183,24 +176,29 @@ int main()
 		while (glfwGetTime() < lastTime + 1.0/TARGET_FPS) {
 
 			// RENDER COMMANDS ...
-			glClearColor(0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 0x00 / RGB_CEIL, 1.0f);
+			glClearColor(0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_DEPTH_BUFFER_BIT);
 
 			myShader.useShader();
-			trans = glm::rotate(trans, (float)glm::radians(0.15f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on y axis
-			//glm::mat4 moved = glm::translate(trans, glm::vec3(cos(glfwGetTime() / 100) / 3, sin(glfwGetTime() / 100) / 3, 0.0f));
-			myShader.setUniformMatrix4fv("transform", 1, trans);
 
-			//glBindTexture(GL_TEXTURE_2D, ids.txt1);
-			myShader.setUniformMatrix4fv("model", 1, model1);
-			myShader.setUniform1i("hex_color", 0xFF2419);
-			GLCall(glBindVertexArray(ids.vao1)); 
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+			const float radius = 10.0f;
+			float camX = (float) sin(glfwGetTime()) * radius;
+			float camZ = (float) cos(glfwGetTime()) * radius;
+			glm::mat4 view;
+			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, -0.0), glm::vec3(0.0, 1.0, 0.0));
+			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
 
-			myShader.setUniformMatrix4fv("model", 1, model2);
-			myShader.setUniform1i("hex_color", 0xD32663);
-			GLCall(glBindVertexArray(ids2.vao1));
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+			myShader.setUniformMatrix4fv("view", 1, view);
+
+			for (unsigned int i = 0; i < SIZE - 1; i++) {
+				struct extendedObjectIds cur_id = plane_ids[i];
+				myShader.setUniform1i("hex_color", kala * (i + 1));
+				glm::mat4 shift = glm::translate(model1, glm::vec3(2 * i, 0, 0));
+				myShader.setUniformMatrix4fv("model", 1, shift);
+				GLCall(glBindVertexArray(cur_id.vao1));
+				GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -210,14 +208,14 @@ int main()
 	}
 
 	// deleting to avoid memory leaks
-	glDeleteVertexArrays(2, &ids.vao1);
-	glDeleteBuffers(4, &ids.vbo1);
-	glDeleteTextures(2, &ids.txt1);
+	for (unsigned int i = 0; i < SIZE; i++) {
+		extendedObjectIds cur_id = plane_ids[i];
+		glDeleteVertexArrays(2, &cur_id.vao1);
+		glDeleteBuffers(4, &cur_id.vbo1);
+		glDeleteTextures(2, &cur_id.txt1);
+	}
 
-	glDeleteVertexArrays(2, &ids.vao1);
-	glDeleteBuffers(4, &ids.vbo1);
-	glDeleteTextures(2, &ids.txt1);
-
+	free(plane_ids);
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
 }
@@ -747,5 +745,65 @@ extendedObjectIds drawDroplet(std::string img_path) {
 
 	std::cout << "leaving water droplet" << std::endl;
 	return { VAO, 0, VBO, 0, EBO, 0, texture1, 0 };
+}
+
+
+intVector2 get_max_and_min(int* mat, unsigned int MAT_SIZE) {
+	intVector2 minmax = { INT_MAX, INT_MIN };
+
+	for (unsigned int i = 0; i < MAT_SIZE; i++) {
+		int cur = mat[i];
+		if (cur < minmax.x) minmax.x = cur;
+		if (cur > minmax.y) minmax.y = cur;
+	}
+
+	return minmax;
+}
+
+float normalize_int(int val, int min, int max) {
+	return 2 * (((float) val - min) / (max - min)) - 1;
+}
+
+void copy_ids(extendedObjectIds* duplicate, extendedObjectIds* reference) {
+	duplicate->vao1 = reference->vao1;
+	duplicate->vao2 = reference->vao2;
+	duplicate->vbo1 = reference->vbo1;
+	duplicate->vbo2 = reference->vbo2;
+	duplicate->ebo1 = reference->ebo1;
+	duplicate->ebo2 = reference->ebo2;
+	duplicate->txt1 = reference->txt1;
+	duplicate->txt2 = reference->txt2;
+}
+
+
+struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
+	struct extendedObjectIds *plane_list = (struct extendedObjectIds *) malloc(sizeof(struct extendedObjectIds) * MAT_SIZE);
+	assert(plane_list != NULL);
+
+	struct intVector2 minmax = get_max_and_min(mat, MAT_SIZE);
+	std::cout << "MIN: " << minmax.x << ", MAX: " << minmax.y << std::endl;
+
+	unsigned int index = 0;
+	while (index < MAT_SIZE && index + 1 < MAT_SIZE) {
+		float normed_l = normalize_int(mat[index], minmax.x, minmax.y);
+		float normed_r = normalize_int(mat[index + 1], minmax.x, minmax.y);
+
+		std::cout << "Index " << index << ", value: " << mat[index] << ", norm l: " << normed_l << std::endl;
+		std::cout << "Index " << index << ", value: " << mat[index] << ", norm r: " << normed_r << std::endl;
+		std::cout << std::endl;
+
+		struct extendedObjectIds temp = drawPlane(
+			glm::vec3(-1.0f, normed_l, 1.0f),
+			glm::vec3(-1.0f, normed_l, -1.0f),
+			glm::vec3(1.0f, normed_r, -1.0f),
+			glm::vec3(1.0f, normed_r, 1.0f)
+		);
+
+		//plane_list[index] = temp;
+		copy_ids(&plane_list[index], &temp);
+		index++;
+	}
+
+	return plane_list;
 }
 
