@@ -140,17 +140,17 @@ int main()
 	);*/
 
 
-
-	int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
-	unsigned int SIZE = 9;
-	extendedObjectIds* plane_ids = drawMatrixPlanes(mat, SIZE);
+	std::vector<int> mat{ -5, 4, 3, 7, 2, 1, 6 };
+	//int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
+	unsigned int SIZE = mat.size();
+	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE); 
-	glEnable(GL_DEPTH);
+	glEnable(GL_DEPTH_TEST);
 	//glCullFace(GL_BACK);
 	//glFrontFace(GL_CCW);
 	
@@ -160,7 +160,7 @@ int main()
 	// dealing with projections
 	glm::mat4 model1(1.0f);
 	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
-	model1 = glm::scale(model1, glm::vec3(50.0f * SIZE / 2 / SIZE, 50.0f  * SIZE / 2 / SIZE, 50.0f * SIZE / 2 / SIZE));
+	model1 = glm::scale(model1, glm::vec3(250.0f / SIZE, 250.0f / SIZE, 250.0f / SIZE));
 	myShader.setUniformMatrix4fv("projection", 1, proj);
 	myShader.setUniform1i("hex_color", 0xFF2419);
 
