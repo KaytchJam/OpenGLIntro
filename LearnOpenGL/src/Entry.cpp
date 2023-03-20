@@ -50,6 +50,7 @@ extendedObjectIds drawTriangle(float r, float g, float b);
 extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
 extendedObjectIds drawDroplet(std::string img_path);
 extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4);
+extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height);
 extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE);
 
 // Vertex Array & Buffer Exercises
@@ -145,12 +146,20 @@ int main()
 	}
 	//std::vector<int> mat{ 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	//int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
-	unsigned int SIZE = mat.size();
-	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
+	
+	extendedObjectIds id = drawPrism(
+		glm::vec3(-1.0f, 0.0f, 1.0f),
+		glm::vec3(-1.0f, 0.0f, -1.0f),
+		glm::vec3(1.0f, 0.0f, -1.0f),
+		glm::vec3(1.0f, 0.0f, 1.0f),
+		1.0f
+	);
+	//unsigned int SIZE = mat.size();
+	//extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE); 
 	glEnable(GL_DEPTH_TEST);
@@ -163,12 +172,15 @@ int main()
 	// dealing with projections
 	glm::mat4 model1(1.0f);
 	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
-	model1 = glm::scale(model1, glm::vec3(250.0f / SIZE, 250.0f / SIZE, 250.0f / SIZE));
+	model1 = glm::scale(model1, glm::vec3(100.0f, 100.0f, 100.0f));
+	model1 = glm::rotate(model1, (float)glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//model1 = glm::scale(model1, glm::vec3(250.0f / SIZE, 250.0f / SIZE, 250.0f / SIZE));
+	myShader.setUniformMatrix4fv("model", 1, model1);
 	myShader.setUniformMatrix4fv("projection", 1, proj);
-	myShader.setUniform1i("hex_color", 0xFF2419);
+	//myShader.setUniform1i("hex_color", 0xFF2419);
 
 	// the render loop
-	//glm::mat4 trans = glm::mat4(1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
 	float xOffset = 0.005f;
 	double lastTime = glfwGetTime();
 	int kala = 0xA1F;
@@ -187,14 +199,22 @@ int main()
 
 			myShader.useShader();
 
-			float camX = (float) sin(glfwGetTime()) * radius;
+			trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on z axis
+			myShader.setUniformMatrix4fv("transform", 1, trans);
+
+
+			myShader.setUniform1b("hex_color", 0x0);
+			glBindVertexArray(id.vao1);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+			/*float camX = (float) sin(glfwGetTime()) * radius;
 			float camZ = (float) cos(glfwGetTime()) * radius;
 			glm::mat4 view;
 			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
+			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));*/
 			//view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
 
-			myShader.setUniformMatrix4fv("view", 1, view);
+			/*myShader.setUniformMatrix4fv("view", 1, view);
 
 			for (unsigned int i = 0; i < SIZE - 1; i++) {
 				struct extendedObjectIds cur_id = plane_ids[i];
@@ -203,24 +223,29 @@ int main()
 				myShader.setUniformMatrix4fv("model", 1, shift);
 				GLCall(glBindVertexArray(cur_id.vao1));
 				GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-			}
+			}*/
 
 			glfwSwapBuffers(window);
 			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
 			allErrorsFound(); // errors found during each iteration
 		}
 		lastTime += 1.0 / TARGET_FPS;
+
 	}
 
+	glDeleteVertexArrays(2, &id.vao1);
+	glDeleteBuffers(4, &id.vbo1);
+	glDeleteTextures(2, &id.txt1);
+
 	// deleting to avoid memory leaks
-	for (unsigned int i = 0; i < SIZE; i++) {
+	/*for (unsigned int i = 0; i < SIZE; i++) {
 		extendedObjectIds cur_id = plane_ids[i];
 		glDeleteVertexArrays(2, &cur_id.vao1);
 		glDeleteBuffers(4, &cur_id.vbo1);
 		glDeleteTextures(2, &cur_id.txt1);
 	}
 
-	free(plane_ids);
+	free(plane_ids);*/
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
 }
@@ -684,8 +709,8 @@ extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 
 		// prism bottom
 		p1.x, p1.y + height, p1.z,
 		p2.x, p2.y + height, p2.z,
-		p3.x, p2.y + height, p3.z,
-		p4.x, p4.y + height, p3.z
+		p3.x, p3.y + height, p3.z,
+		p4.x, p4.y + height, p4.z
 	};
 
 	int indices[] = { 
@@ -693,36 +718,40 @@ extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 
 		2, 3, 0, // top
 
 		0, 4, 1, 
-		1, 5, 6, // side
+		1, 4, 5, // side
 
-		6, 1, 2, 
-		2, 6, 7, // side
+		5, 1, 2, 
+		2, 5, 6, // side
 
-		7, 2, 3, 
-		3, 7, 8, // side
+		6, 2, 3, 
+		3, 6, 7, // side
 
-		8, 3, 0, 
-		0, 3, 4, // side
+		7, 3, 0, 
+		0, 7, 4, // side
 
 		4, 5, 6, 
-		6, 7, 8 // bottom
+		6, 7, 4 // bottom
 	};
 
 	unsigned int vao, vbo, ebo;
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
 
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	GLCall(glGenBuffers(1, &vbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	GLCall(glGenBuffers(1, &ebo));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL);
-	glEnableVertexAttribArray(0);
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL));
+	GLCall(glEnableVertexAttribArray(0));
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return { vao, 0, vbo, 0, ebo, 0, 0 };
 }
