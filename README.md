@@ -36,24 +36,20 @@ if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) velocity.y *= -1;
 
 This one mostly involves messing with the Fragment Shader & Vertex Shader as well as uniforms and textures. There's also a bit of model matrix transformation used in order to rotate along the y-axis
 
-`
+```
 glm::mat4 trans = glm::mat4(1.0f);
 
-.
-.
-.
+...
 
 {
     myShader.useShader();
     trans = glm::rotate(trans, (float) glm::radians (1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on y axis
     myShader.setUniformMatrix4fv("transform", 1, trans);
 
-    .
-    .
-    .
+    ...
 
 }
-`
+```
 
 ##### ***Draw Array Prisms***
 
