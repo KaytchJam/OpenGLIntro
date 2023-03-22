@@ -23,8 +23,8 @@ Tried to recreate those old bouncing DVD Logo screens. This was prior to really 
 
 ```
 int w, h;
-velocity.x = (float) copysign (1, velocity.x) * ((float) w / ( w * 144));
-velocity.y = (float) copysign (1, velocity.y) * ((float) h / ( h * 168));
+velocity.x = (float) copysign(1, velocity.x) * ((float) w / ( w * 144));
+velocity.y = (float) copysign(1, velocity.y) * ((float) h / ( h * 168));
 
 offsetV = addVector(offsetV, velocity);
 if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) velocity.x *= -1;
@@ -59,8 +59,8 @@ while {
 - `drawPrism (glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height);`
 - `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE);`
 
-Takes in an array and draws thems as prisms in the from of a strip. The primary work is done in `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE)` and `drawPrism(glm::vec3 p1, ..., glm::vec3 p4, float height)`.
-Height is normalized based on maximum and minimum array values, and implemented in the function `float normalize_int (int val, int min, int max)`. The length of the rendered chain (int terms of numbers of prisms) is always `MAT_SIZE - 1`.
+Takes in an array and draws thems as prisms in the from of a strip. The primary work is done in `drawMatrixPrisms(int *mat, unsigned int MAT_SIZE)` and `drawPrism(glm::vec3 p1, ..., glm::vec3 p4, float height)`.
+Height is normalized based on maximum and minimum array values, and implemented in the function `float normalize_int(int val, int min, int max)`. The length of the rendered chain (int terms of numbers of prisms) is always `MAT_SIZE - 1`.
 
 ![Draw Array Prisms GIF](https://github.com/KaytchJam/OpenGLIntro/blob/master/openGL_screenshots/drawMatrixPlane_EX1.gif?raw=true)
 
