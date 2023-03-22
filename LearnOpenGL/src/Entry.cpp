@@ -156,7 +156,7 @@ int main()
 		glm::vec3(1.0f, 0.0f, 1.0f),
 		0.5f
 	);*/
-	unsigned int SIZE = mat.size();
+	unsigned int SIZE = (unsigned int) mat.size();
 	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
@@ -854,33 +854,19 @@ float normalize_int(int val, int min, int max) {
 	return 2 * (((float) val - min) / (max - min)) - 1;
 }
 
-void copy_ids(extendedObjectIds* duplicate, extendedObjectIds* reference) {
-	duplicate->vao1 = reference->vao1;
-	duplicate->vao2 = reference->vao2;
-	duplicate->vbo1 = reference->vbo1;
-	duplicate->vbo2 = reference->vbo2;
-	duplicate->ebo1 = reference->ebo1;
-	duplicate->ebo2 = reference->ebo2;
-	duplicate->txt1 = reference->txt1;
-	duplicate->txt2 = reference->txt2;
-}
-
-
+/* 
+* Return a matrix of extendedObjectIds 
+*/
 struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
 	struct extendedObjectIds *plane_list = (struct extendedObjectIds *) malloc(sizeof(struct extendedObjectIds) * MAT_SIZE);
 	assert(plane_list != NULL);
 
 	struct intVector2 minmax = get_max_and_min(mat, MAT_SIZE);
-	//std::cout << "MIN: " << minmax.x << ", MAX: " << minmax.y << std::endl;
 
 	unsigned int index = 0;
 	while (index < MAT_SIZE && index + 1 < MAT_SIZE) {
 		float normed_l = normalize_int(mat[index], minmax.x, minmax.y);
 		float normed_r = normalize_int(mat[index + 1], minmax.x, minmax.y);
-
-		//std::cout << "Index " << index << ", value: " << mat[index] << ", norm l: " << normed_l << std::endl;
-		//std::cout << "Index " << index << ", value: " << mat[index] << ", norm r: " << normed_r << std::endl;
-		//std::cout << std::endl;
 
 		struct extendedObjectIds temp = drawPrism(
 			glm::vec3(-1.0f, normed_l, 1.0f),
@@ -890,8 +876,7 @@ struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
 			1.0f
 		);
 
-		//plane_list[index] = temp;
-		copy_ids(&plane_list[index], &temp);
+		memcpy(&plane_list[index], &temp, sizeof(extendedObjectIds));
 		index++;
 	}
 
