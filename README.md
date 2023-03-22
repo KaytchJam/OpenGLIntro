@@ -38,16 +38,15 @@ This one mostly involves messing with the Fragment Shader & Vertex Shader as wel
 
 ```
 glm::mat4 trans = glm::mat4(1.0f);
-
 ...
-
-{
-    myShader.useShader();
-    trans = glm::rotate(trans, (float) glm::radians (1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on y axis
-    myShader.setUniformMatrix4fv("transform", 1, trans);
-
+while {
     ...
+    myShader.useShader();
 
+    // rotate on y axis
+    trans = glm::rotate(trans, (float) glm::radians (1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    myShader.setUniformMatrix4fv("transform", 1, trans);
+    ...
 }
 ```
 
