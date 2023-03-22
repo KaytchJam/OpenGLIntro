@@ -51,7 +51,7 @@ extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
 extendedObjectIds drawDroplet(std::string img_path);
 extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4);
 extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height);
-extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE);
+extendedObjectIds *drawMatrixPrisms(int* mat, unsigned int MAT_SIZE);
 
 // Vertex Array & Buffer Exercises
 objectIds exercise1();
@@ -157,7 +157,7 @@ int main()
 		0.5f
 	);*/
 	unsigned int SIZE = (unsigned int) mat.size();
-	extendedObjectIds* plane_ids = drawMatrixPlanes(mat.data(), SIZE);
+	extendedObjectIds* plane_ids = drawMatrixPrisms(mat.data(), SIZE);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
@@ -857,7 +857,7 @@ float normalize_int(int val, int min, int max) {
 /* 
 * Return a matrix of extendedObjectIds 
 */
-struct extendedObjectIds *drawMatrixPlanes(int* mat, unsigned int MAT_SIZE) {
+struct extendedObjectIds *drawMatrixPrisms(int* mat, unsigned int MAT_SIZE) {
 	struct extendedObjectIds *plane_list = (struct extendedObjectIds *) malloc(sizeof(struct extendedObjectIds) * MAT_SIZE);
 	assert(plane_list != NULL);
 
