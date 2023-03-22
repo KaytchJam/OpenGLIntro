@@ -2,24 +2,24 @@
 
 ## A Collection of Projects as I try to learn OpenGL
 
-#### *OpenGLIntro*
+### *OpenGLIntro*
 
 Based on TheCherno's intro to OpenGL series, largely be just following along. In the long run I wouldn't say I learnt a lot about how to do things myself, but regardless it got me started and helped me work on my C++ a bit more.
 
 
-#### *Segmented Display Simulator*
+### *Segmented Display Simulator*
 
 Trying to put what I learnt into practice. A simulator for a Seven Segmented Display (may be more than 7 in the future).
 
-#### *Learn Open GL*
+### *Learn Open GL*
 
 Based on the Learn Open GL book/guides. A bit more of a freeform way for me to work along and figure out how openGL works. Arguably the meat of this entire repository since I'm not really following a guide and really just trying to make things on my own. Listed below are a couple "subprojects," just me trying to see if I can render whatever idea I had in my head or help practice some openGL tool or general computer graphics concept.
 
-##### Subprojects:
+#### Subprojects:
 
-###### ***Draw Array Prisms***
+##### ***Draw Array Prisms***
 
-###### FUNCTIONS MADE FOR THIS:
+###### Functions made for this:
 
 - `get_max_and_min (int *mat, unsigned int MAT_SIZE);`
 - `normalize_int (int val, int min, int max);`
