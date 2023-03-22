@@ -28,7 +28,7 @@ Based on the Learn Open GL book/guides. A bit more of a freeform way for me to w
 
 Takes in an array and draws thems as prisms in the from of a strip. The primary work is done in `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE)` and `drawPrism(glm::vec3 p1, ..., glm::vec3 p4, float height)`. Height is normalized based on maximum and minimum array values, and implemented in the function `float normalize_int (int val, int min, int max)`. The length of the rendered chain (int terms of numbers of prisms) is always `MAT_SIZE - 1`.
 
-[Draw Array Prisms GIF](https://github.com/KaytchJam/OpenGLIntro/blob/master/openGL_screenshots/drawMatrixPlane_EX1.gif)
+[Draw Array Prisms GIF](https://github.com/KaytchJam/OpenGLIntro/blob/master/openGL_screenshots/drawMatrixPlane_EX1.gif?raw=true)
 
 In working on this I mostly learnt about basic Model View Projection matrix manipulations and rendering in 3D spaces. Model matrix for scaling and translating the prisms properly, and the View matrix so that I could rotate around the entire prism chain and not have to apply a transformation on the prisms individually. One thing I could potentially do is coalesce all the vertex array objects created into one singular vertex array, which would probably involve merging the Vertex Buffers & Index Buffers of all prisms in the chain. 
 
