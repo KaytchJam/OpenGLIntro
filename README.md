@@ -19,14 +19,15 @@ Based on the Learn Open GL book/guides. A bit more of a freeform way for me to w
 
 ###### ***Draw Array Prisms***
 
-FUNCTIONS MADE FOR THIS:
+###### FUNCTIONS MADE FOR THIS:
 
 - `get_max_and_min (int *mat, unsigned int MAT_SIZE);`
 - `normalize_int (int val, int min, int max);`
 - `drawPrism (glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height);`
 - `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE);`
 
-Takes in an array and draws thems as prisms in the from of a strip. The primary work is done in `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE)` and `drawPrism(glm::vec3 p1, ..., glm::vec3 p4, float height)`. Height is normalized based on maximum and minimum array values, and implemented in the function `float normalize_int (int val, int min, int max)`. The length of the rendered chain (int terms of numbers of prisms) is always `MAT_SIZE - 1`.
+Takes in an array and draws thems as prisms in the from of a strip. The primary work is done in `drawMatrixPrisms (int *mat, unsigned int MAT_SIZE)` and `drawPrism(glm::vec3 p1, ..., glm::vec3 p4, float height)`.
+Height is normalized based on maximum and minimum array values, and implemented in the function `float normalize_int (int val, int min, int max)`. The length of the rendered chain (int terms of numbers of prisms) is always `MAT_SIZE - 1`.
 
 ![Draw Array Prisms GIF](https://github.com/KaytchJam/OpenGLIntro/blob/master/openGL_screenshots/drawMatrixPlane_EX1.gif?raw=true)
 
