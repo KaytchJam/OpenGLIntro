@@ -17,9 +17,9 @@ Based on the Learn Open GL book/guides. A bit more of a freeform way for me to w
 
 ##### Subprojects:
 
-###### Draw Array Prisms
+###### ***Draw Array Prisms***
 
-####### FUNCTIONS MADE FOR THIS:
+FUNCTIONS MADE FOR THIS:
 
 - `get_max_and_min (int *mat, unsigned int MAT_SIZE);`
 - `normalize_int (int val, int min, int max);`
