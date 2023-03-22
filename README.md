@@ -21,7 +21,7 @@ Based on the Learn Open GL book/guides. A bit more of a freeform way for me to w
 
 Tried to recreate those old bouncing DVD Logo screens. This was prior to really knowing how to work with MVPs at all, so all the buffer coordinates are mapped onto Clip Space from the get go. Bouncing is just done by checking against the screen boundaries (in clip space, so -1 and 1) and multiplying a velocity vector by { -1, 0 } or { 0, -1 } depending on whether the boundary was crossed on the x or y axis.
 
-`
+```
 int w, h;
 velocity.x = (float) copysign (1, velocity.x) * ((float) w / ( w * 144));
 velocity.y = (float) copysign (1, velocity.y) * ((float) h / ( h * 168));
@@ -29,7 +29,7 @@ velocity.y = (float) copysign (1, velocity.y) * ((float) h / ( h * 168));
 offsetV = addVector(offsetV, velocity);
 if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) velocity.x *= -1;
 if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) velocity.y *= -1;
-`
+```
 
 
 #### ***Draw Droplet***
