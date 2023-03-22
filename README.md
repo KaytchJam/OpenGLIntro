@@ -17,6 +17,44 @@ Based on the Learn Open GL book/guides. A bit more of a freeform way for me to w
 
 #### Subprojects:
 
+#### ***Bouncing Logo***
+
+Tried to recreate those old bouncing DVD Logo screens. This was prior to really knowing how to work with MVPs at all, so all the buffer coordinates are mapped onto Clip Space from the get go. Bouncing is just done by checking against the screen boundaries (in clip space, so -1 and 1) and multiplying a velocity vector by { -1, 0 } or { 0, -1 } depending on whether the boundary was crossed on the x or y axis.
+
+`
+int w, h;
+velocity.x = (float) copysign (1, velocity.x) * ((float) w / ( w * 144));
+velocity.y = (float) copysign (1, velocity.y) * ((float) h / ( h * 168));
+
+offsetV = addVector(offsetV, velocity);
+if (offsetV.x + 0.25f >= 1.0f || offsetV.x - 0.25f <= -1.0f) velocity.x *= -1;
+if (offsetV.y + 0.25f >= 1.0f || offsetV.y - 0.25f <= -1.0f) velocity.y *= -1;
+`
+
+
+#### ***Draw Droplet***
+
+This one mostly involves messing with the Fragment Shader & Vertex Shader as well as uniforms and textures. There's also a bit of model matrix transformation used in order to rotate along the y-axis
+
+`
+glm::mat4 trans = glm::mat4(1.0f);
+
+.
+.
+.
+
+{
+    myShader.useShader();
+    trans = glm::rotate(trans, (float) glm::radians (1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // rotate on y axis
+    myShader.setUniformMatrix4fv("transform", 1, trans);
+
+    .
+    .
+    .
+
+}
+`
+
 ##### ***Draw Array Prisms***
 
 ###### Functions made for this:
@@ -33,5 +71,4 @@ Height is normalized based on maximum and minimum array values, and implemented 
 
 In working on this I mostly learnt about basic Model View Projection matrix manipulations and rendering in 3D spaces. Model matrix for scaling and translating the prisms properly, and the View matrix so that I could rotate around the entire prism chain and not have to apply a transformation on the prisms individually. One thing I could potentially do is coalesce all the vertex array objects created into one singular vertex array, which would probably involve merging the Vertex Buffers & Index Buffers of all prisms in the chain. 
 
-###### Draw Droplet 
 
