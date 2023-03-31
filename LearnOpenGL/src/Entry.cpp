@@ -123,10 +123,11 @@ int main()
 
 	//std::string shaderPath("resources/shaders/");
 	Shader myShader("resources/shaders/vertex/NoTexTransform.shader", "resources/shaders/fragment/ColorUniform.shader");
-	Canvas2D canva(100, 100, &myShader);
+	Canvas2D canva(100, 100, & myShader);
 
-	Rect2D r1 = Rect2D(0, 0, 50, 100);
-	r1.translate(50, 0);
+	Rect2D r1 = Rect2D(0, 0, 20, 20);
+	r1.translate(50 - (r1.getLength() / 2), 50 - (r1.getHeight() / 2));
+
 	myShader.setUniform1i("hex_color", 0x15A477);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
