@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Canvas2D.cpp" />
     <ClCompile Include="src\Entry.cpp" />
     <ClCompile Include="src\gl_tools\ErrorHandler.cpp" />
     <ClCompile Include="src\gl_tools\glad.c" />

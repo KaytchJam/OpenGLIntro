@@ -174,8 +174,6 @@ int main()
 	// dealing with projections
 	glm::mat4 model1(1.0f);
 	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
-	//model1 = glm::scale(model1, glm::vec3(100.0f, 100.0f, 100.0f));
-	//model1 = glm::rotate(model1, (float)glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model1 = glm::scale(model1, glm::vec3(250.0f / ( 2 * SIZE ), 250.0f / ( 2 * SIZE), 250.0f / (2 * SIZE)));
 	myShader.setUniformMatrix4fv("model", 1, model1);
 	myShader.setUniformMatrix4fv("projection", 1, proj);
@@ -201,14 +199,6 @@ int main()
 
 			myShader.useShader();
 
-			//trans = glm::rotate(trans, (float)glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 1.0f)); // rotate on y axis
-			//myShader.setUniformMatrix4fv("transform", 1, trans);
-
-
-			//myShader.setUniform1b("hex_color", 0x0);
-			//glBindVertexArray(id.vao1);
-			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
 			float camX = (float) sin(glfwGetTime()) * radius;
 			float camZ = (float) cos(glfwGetTime()) * radius;
 			glm::mat4 view;
@@ -216,13 +206,15 @@ int main()
 			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
 			view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
 
-			myShader.setUniformMatrix4fv("view", 1, view);
+			//myShader.setUniformMatrix4fv("view", 1, view);
 
 			for (unsigned int i = 0; i < SIZE - 1; i++) {
 				struct extendedObjectIds cur_id = plane_ids[i];
 				myShader.setUniform1i("hex_color", kala * (i + 1));
 				glm::mat4 shift = glm::translate(model1, glm::vec3(2 * i, 0, 0));
-				myShader.setUniformMatrix4fv("model", 1, shift);
+				//myShader.setUniformMatrix4fv("model", 1, shift);
+				glm::mat4 MVP = proj * view * shift;
+				myShader.setUniformMatrix4fv("MVP", 1, MVP);
 				GLCall(glBindVertexArray(cur_id.vao1));
 				GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0));
 			}

@@ -1,0 +1,340 @@
+#include <iostream>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+// IMAGE / TEXTURE FUNCTIONALITY
+#include "vendor/stb_image/stb_image.h"
+
+// My additions
+#include "gl_tools/Shader.h"
+#include "gl_tools/ErrorHandler.h"
+
+// C/C++ Standard Library
+#include <string>
+#include <math.h>
+#include <time.h>
+#include <cmath>
+
+// GLM MATRIX MATH
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+int TARGET_FPS = 30;
+const float RGB_CEIL = 255;
+
+
+// basic vector struct for storing x, y, and z values
+struct basicVector3 { float x, y, z; };
+struct basicVector2 { float x, y; };
+struct intVector2 { int x, y; };
+
+
+// just to make doing these exercises easier, returning a struct of all our object ids from each exercise
+struct objectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo; };
+struct extendedObjectIds { unsigned int vao1, vao2, vbo1, vbo2, ebo1, ebo2, txt1, txt2; };
+struct shaderIds { unsigned int program1, program2, program3; };
+
+struct plane_object {
+	float y;
+	struct extendedObjectIds data;
+};
+
+basicVector2 addVector(basicVector2 v1, basicVector2 v2) { return { v1.x + v2.x, v1.y + v2.y }; }
+basicVector2 scalarVector(float scalar, basicVector2 v1) { return { scalar * v1.x, scalar * v1.y }; }
+
+// General Shape Draws
+objectIds rainbowPentagon();
+extendedObjectIds drawTriangle(float r, float g, float b);
+extendedObjectIds textureSquare(std::string img_path, std::string img_path_2);
+extendedObjectIds drawDroplet(std::string img_path);
+extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4);
+extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height);
+extendedObjectIds *drawMatrixPrisms(int* mat, unsigned int MAT_SIZE);
+
+// Vertex Array & Buffer Exercises
+objectIds exercise1();
+objectIds exercise2();
+objectIds exercise3();
+
+// Messing Around / Testing
+extendedObjectIds bouncingLogo(std::string logo_path);
+
+void processInput(GLFWwindow* window) 
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+		std::cout << "Window was closed using escape key" << std::endl;
+	}
+}
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void printMat4(glm::mat4& myMat) 
+{
+	std::printf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n",
+		myMat[0].x, myMat[1].x, myMat[2].x, myMat[3].x,
+		myMat[0].y, myMat[1].y, myMat[2].y, myMat[3].y,
+		myMat[0].z, myMat[1].z, myMat[2].z, myMat[3].z,
+		myMat[0].w, myMat[1].w, myMat[2].w, myMat[3].w);
+	std::cout << std::endl;
+}
+
+int main()
+{
+
+	glfwInit(); // initialize glfw
+
+	// setting window options
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	const int PROJECT_LENGTH = 1280;
+	const int PROJECT_HEIGHT = 720;
+
+	// create window object
+	GLFWwindow* window = glfwCreateWindow(PROJECT_LENGTH, PROJECT_HEIGHT, "LearnOpenGL", NULL, NULL);
+
+	// check for proper window creation
+	if (window == NULL)
+	{
+		std::cout << "Window creation failed." << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	// check for proper GLAD initialization
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+
+	glViewport(0, 0, PROJECT_LENGTH, PROJECT_HEIGHT); // indicate rendering window size
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	Shader myShader("resources/shaders/vertex/NoTexTransform.shader", "resources/shaders/fragment/ColorUniform.shader");
+	
+	std::vector<int> mat{ 4, 2, 1, 0, 5, 7, 8, 1, 5, 4, 3, 6, 4, 2 };
+	unsigned int SIZE = (unsigned int) mat.size();
+	extendedObjectIds* plane_ids = drawMatrixPrisms(mat.data(), SIZE);
+
+	std::cout << "Buffer stuff dealt with" << std::endl;
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_CULL_FACE); 
+	glEnable(GL_DEPTH_TEST);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
+	
+	// the above settings are associated with our currently bound vertex buffer object
+	std::cout << "about to enter the rendering loop" << std::endl;
+
+	// dealing with projections
+	glm::mat4 model1(1.0f);
+	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
+	model1 = glm::scale(model1, glm::vec3(250.0f / ( 2 * SIZE ), 250.0f / ( 2 * SIZE), 250.0f / (2 * SIZE)));
+
+	// the render loop
+	glm::mat4 trans = glm::mat4(1.0f);
+	float xOffset = 0.005f;
+	double lastTime = glfwGetTime();
+	int kala = 0xA1F;
+	const float radius = 10.0f;
+	//glm::mat4(view);
+	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
+	{
+		processInput(window); // handle user input
+
+		while (glfwGetTime() < lastTime + 1.0/TARGET_FPS) {
+
+			// RENDER COMMANDS ...
+			glClearColor(0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			myShader.useShader();
+
+			float camX = (float) sin(glfwGetTime()) * radius;
+			float camZ = (float) cos(glfwGetTime()) * radius;
+			glm::mat4 view;
+			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
+			view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
+
+			for (unsigned int i = 0; i < SIZE - 1; i++) {
+				struct extendedObjectIds cur_id = plane_ids[i];
+				myShader.setUniform1i("hex_color", kala * (i + 1));
+				glm::mat4 shift = glm::translate(model1, glm::vec3(2 * i, 0, 0));
+
+				glm::mat4 MVP = proj * view * shift;
+				myShader.setUniformMatrix4fv("MVP", 1, MVP);
+
+				GLCall(glBindVertexArray(cur_id.vao1));
+				GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0));
+			}
+
+			glfwSwapBuffers(window);
+			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
+			allErrorsFound(); // errors found during each iteration
+		}
+		lastTime += 1.0 / TARGET_FPS;
+
+	}
+
+	// deleting to avoid memory leaks
+	for (unsigned int i = 0; i < SIZE; i++) {
+		extendedObjectIds cur_id = plane_ids[i];
+		glDeleteVertexArrays(2, &cur_id.vao1);
+		glDeleteBuffers(4, &cur_id.vbo1);
+		glDeleteTextures(2, &cur_id.txt1);
+	}
+
+	free(plane_ids);
+	glfwTerminate(); // clean all of glfw's allocated resources
+	return 0;
+}
+
+extendedObjectIds drawPlane(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4) {
+	float vertices[] = {
+		p1.x, p1.y, p1.z,
+		p2.x, p2.y, p2.z,
+		p3.x, p3.y, p3.z,
+		p4.x, p4.y, p4.z
+	};
+
+	unsigned int indices[] = {
+		0, 1, 2, 2, 3, 0
+	};
+
+	unsigned int vao, vbo, ebo;
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
+
+	GLCall(glGenBuffers(1, &vbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 3, NULL));
+	GLCall(glEnableVertexAttribArray(0));
+
+	GLCall(glGenBuffers(1, &ebo));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+	GLCall(glBindVertexArray(0));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+
+	return { vao, 0, vbo, 0, ebo, 0, 0, 0 };
+}
+
+extendedObjectIds drawPrism(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float height) {
+	float vertices[] = {
+		// prism top
+		p1.x, p1.y, p1.z,
+		p2.x, p2.y, p2.z,
+		p3.x, p3.y, p3.z,
+		p4.x, p4.y, p4.z,
+
+		// prism bottom
+		p1.x, p1.y + height, p1.z,
+		p2.x, p2.y + height, p2.z,
+		p3.x, p3.y + height, p3.z,
+		p4.x, p4.y + height, p4.z
+	};
+
+	int indices[] = { 
+		0, 1, 2, 
+		2, 3, 0, // top
+
+		0, 4, 1, 
+		1, 4, 5, // side
+
+		5, 1, 2, 
+		2, 5, 6, // side
+
+		6, 2, 3, 
+		3, 6, 7, // side
+
+		7, 3, 0, 
+		0, 7, 4, // side
+
+		4, 5, 6, 
+		6, 7, 4 // bottom
+	};
+
+	unsigned int vao, vbo, ebo;
+
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
+
+	GLCall(glGenBuffers(1, &vbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
+	GLCall(glGenBuffers(1, &ebo));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL));
+	GLCall(glEnableVertexAttribArray(0));
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return { vao, 0, vbo, 0, ebo, 0, 0 };
+}
+
+intVector2 get_max_and_min(int* mat, unsigned int MAT_SIZE) {
+	intVector2 minmax = { INT_MAX, INT_MIN };
+
+	for (unsigned int i = 0; i < MAT_SIZE; i++) {
+		int cur = mat[i];
+		if (cur < minmax.x) minmax.x = cur;
+		if (cur > minmax.y) minmax.y = cur;
+	}
+
+	return minmax;
+}
+
+float normalize_int(int val, int min, int max) {
+	return 2 * (((float) val - min) / (max - min)) - 1;
+}
+
+/* 
+* Return a matrix of extendedObjectIds 
+*/
+struct extendedObjectIds *drawMatrixPrisms(int* mat, unsigned int MAT_SIZE) {
+	struct extendedObjectIds *plane_list = (struct extendedObjectIds *) malloc(sizeof(struct extendedObjectIds) * MAT_SIZE);
+	assert(plane_list != NULL);
+
+	struct intVector2 minmax = get_max_and_min(mat, MAT_SIZE);
+
+	unsigned int index = 0;
+	while (index < MAT_SIZE && index + 1 < MAT_SIZE) {
+		float normed_l = normalize_int(mat[index], minmax.x, minmax.y);
+		float normed_r = normalize_int(mat[index + 1], minmax.x, minmax.y);
+
+		struct extendedObjectIds temp = drawPrism(
+			glm::vec3(-1.0f, normed_l, 1.0f),
+			glm::vec3(-1.0f, normed_l, -1.0f),
+			glm::vec3(1.0f, normed_r, -1.0f),
+			glm::vec3(1.0f, normed_r, 1.0f),
+			1.0f
+		);
+
+		memcpy(&plane_list[index], &temp, sizeof(extendedObjectIds));
+		index++;
+	}
+
+	return plane_list;
+}
