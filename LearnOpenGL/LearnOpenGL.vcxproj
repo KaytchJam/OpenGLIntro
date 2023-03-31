@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\tests\bouncing_logo_code.txt" />
+    <Text Include="src\tests\drawArrayPrisms.txt" />
     <Text Include="src\tests\spinning_droplet_code.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,7 +23,6 @@ private:
 	glm::mat4 model;
 public:
 	Shape2D(ShapeType shape_type, float *data, unsigned int DATA_SIZE);
-
 	~Shape2D() {
 		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(1, &vbo);
@@ -32,19 +31,24 @@ public:
 	}
 
 	// modifiers
-	virtual void translate(glm::vec3 translation_vec);
+	virtual void translate(float x, float y);
 	virtual void rotate(float radians, glm::vec3 rotation_vec);
+
+	// getters
 	glm::mat4 *getModelMatrix() { return &model;  }
+	unsigned int getVAO() const { return vao; }
+	unsigned int getEBO_COUNT() const { return ebo_count; }
+
 	//void scale(float scale_amount);
 };
 
-class Rect2D : Shape2D {
+class Rect2D : public Shape2D {
 private:
 	float length, height;
 	float x, y;
 public:
 	Rect2D(float x, float y, float length, float width);
-	~Rect2D();
+	~Rect2D() {}
 
 	// getters
 	const float getLength() { return this->length; }
@@ -53,7 +57,7 @@ public:
 	const float getY() { return this->y; }
 };
 
-class Poly2D : Shape2D {
+class Poly2D : public Shape2D {
 private:
 	float x, y;
 public:
@@ -80,16 +84,19 @@ public:
 	}
 
 	// destructor
-	~Canvas2D();
+	~Canvas2D() {
+
+	}
 
 	int getCanvasLength() const { return this->length; }
 	int getCanvasHeight() const { return this->height; }
 	
-	void renderShape(Shape2D* s) {
+	void renderShape(Shape2D& s) {
 		this->sh->useShader();
-		glm::mat4 MVP = this->proj * this->view * (*s->getModelMatrix());
-		GLCall(glBindVertexArray(s->vao));
-		GLCall(glDrawElements(GL_TRIANGLES, s->ebo_count, GL_UNSIGNED_INT, NULL));
+		glm::mat4 MVP = this->proj * this->view * (*s.getModelMatrix());
+		this->sh->setUniformMatrix4fv("MVP", 1, MVP);
+		GLCall(glBindVertexArray(s.getVAO()));
+		GLCall(glDrawElements(GL_TRIANGLES, s.getEBO_COUNT(), GL_UNSIGNED_INT, NULL));
 	}
 
 	void setShader(Shader *shader_program) {

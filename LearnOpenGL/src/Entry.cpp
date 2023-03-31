@@ -9,6 +9,7 @@
 // My additions
 #include "gl_tools/Shader.h"
 #include "gl_tools/ErrorHandler.h"
+#include "Canvas2D.h"
 
 // C/C++ Standard Library
 #include <string>
@@ -122,46 +123,15 @@ int main()
 
 	//std::string shaderPath("resources/shaders/");
 	Shader myShader("resources/shaders/vertex/NoTexTransform.shader", "resources/shaders/fragment/ColorUniform.shader");
+	Canvas2D canva(100, 100, &myShader);
 
-	// enable scanline effect
-	myShader.useShader();
-	//myShader.setUniform1b("scanlines", true);
-
-	//std::string path_header = "resources/textures/";
-	//extendedObjectIds ids = bouncingLogo(path_header + "dvd_video.png");
-
-	//glm::mat4 model2 = model1;
-
-	//model1 = glm::translate(model1, glm::vec3(0.0f, -50.0f, 0.0f));
-
-	/*glm::mat4 view = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, 200.0f),
-		glm::vec3(0.0f, 100.0f, 0.0f),
-		glm::vec3(0.0f, 20.0f, 0.0f)
-	);*/
-
-	/*std::vector<int> mat(1);
-	for (int i = 0; i < 20; i++) {
-		mat.push_back(i % 10);
-	}*/
-	
-	//std::vector<int> mat{ 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-	std::vector<int> mat{ 4, 2, 1, 0, 5, 7, 8, 1, 5, 4, 3, 6, 4, 2 };
-	//int mat[] = { -4, -2, 0, 2, 4, 2, 0, -2, -4};
-	
-	/*extendedObjectIds id = drawPrism(
-		glm::vec3(-1.0f, 0.0f, 1.0f),
-		glm::vec3(-1.0f, 0.0f, -1.0f),
-		glm::vec3(1.0f, 0.0f, -1.0f),
-		glm::vec3(1.0f, 0.0f, 1.0f),
-		0.5f
-	);*/
-	unsigned int SIZE = (unsigned int) mat.size();
-	extendedObjectIds* plane_ids = drawMatrixPrisms(mat.data(), SIZE);
+	Rect2D r1 = Rect2D(0, 0, 50, 100);
+	r1.translate(50, 0);
+	myShader.setUniform1i("hex_color", 0x15A477);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // enable wireframe mode
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE); 
 	glEnable(GL_DEPTH_TEST);
@@ -171,21 +141,8 @@ int main()
 	// the above settings are associated with our currently bound vertex buffer object
 	std::cout << "about to enter the rendering loop" << std::endl;
 
-	// dealing with projections
-	glm::mat4 model1(1.0f);
-	glm::mat4 proj(glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, -500.0f, 500.0f));
-	model1 = glm::scale(model1, glm::vec3(250.0f / ( 2 * SIZE ), 250.0f / ( 2 * SIZE), 250.0f / (2 * SIZE)));
-	myShader.setUniformMatrix4fv("model", 1, model1);
-	myShader.setUniformMatrix4fv("projection", 1, proj);
-	//myShader.setUniform1i("hex_color", 0xFF2419);
-
 	// the render loop
-	glm::mat4 trans = glm::mat4(1.0f);
-	float xOffset = 0.005f;
 	double lastTime = glfwGetTime();
-	int kala = 0xA1F;
-	const float radius = 10.0f;
-	//glm::mat4(view);
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
@@ -197,27 +154,7 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
-			myShader.useShader();
-
-			float camX = (float) sin(glfwGetTime()) * radius;
-			float camZ = (float) cos(glfwGetTime()) * radius;
-			glm::mat4 view;
-			view = glm::lookAt(glm::vec3(camX - 1, 1.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-			view = glm::translate(view, glm::vec3(-150.0f, 0.0f, 0.0f));
-			view = glm::scale(view, glm::vec3(2.0f, 2.0f, 2.0f));
-
-			//myShader.setUniformMatrix4fv("view", 1, view);
-
-			for (unsigned int i = 0; i < SIZE - 1; i++) {
-				struct extendedObjectIds cur_id = plane_ids[i];
-				myShader.setUniform1i("hex_color", kala * (i + 1));
-				glm::mat4 shift = glm::translate(model1, glm::vec3(2 * i, 0, 0));
-				//myShader.setUniformMatrix4fv("model", 1, shift);
-				glm::mat4 MVP = proj * view * shift;
-				myShader.setUniformMatrix4fv("MVP", 1, MVP);
-				GLCall(glBindVertexArray(cur_id.vao1));
-				GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0));
-			}
+			canva.renderShape(r1);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents(); // checks if an event has been triggered (i.e. keyboard input)
@@ -230,16 +167,6 @@ int main()
 	/*glDeleteVertexArrays(2, &id.vao1);
 	glDeleteBuffers(4, &id.vbo1);
 	glDeleteTextures(2, &id.txt1);*/
-
-	// deleting to avoid memory leaks
-	for (unsigned int i = 0; i < SIZE; i++) {
-		extendedObjectIds cur_id = plane_ids[i];
-		glDeleteVertexArrays(2, &cur_id.vao1);
-		glDeleteBuffers(4, &cur_id.vbo1);
-		glDeleteTextures(2, &cur_id.txt1);
-	}
-
-	free(plane_ids);
 	glfwTerminate(); // clean all of glfw's allocated resources
 	return 0;
 }

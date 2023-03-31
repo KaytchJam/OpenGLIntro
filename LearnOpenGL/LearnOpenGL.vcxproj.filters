@@ -81,5 +81,6 @@
   <ItemGroup>
     <Text Include="src\tests\bouncing_logo_code.txt" />
     <Text Include="src\tests\spinning_droplet_code.txt" />
+    <Text Include="src\tests\drawArrayPrisms.txt" />
   </ItemGroup>
 </Project>
