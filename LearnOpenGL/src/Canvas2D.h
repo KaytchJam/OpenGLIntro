@@ -13,7 +13,8 @@
 enum ShapeType {
 	RECTANGLE,
 	POLYGON,
-	ELLIPSE
+	ELLIPSE,
+	COUNT = 3
 };
 
 class Shape2D {
@@ -32,6 +33,7 @@ public:
 
 	// modifiers
 	virtual void translate(float x, float y);
+	virtual void translate(glm::vec2 trans_vec);
 	virtual void rotate(float radians, glm::vec3 rotation_vec);
 
 	// getters

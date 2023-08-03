@@ -86,6 +86,34 @@ void printMat4(glm::mat4& myMat)
 	std::cout << std::endl;
 }
 
+static bool LEFT_HELD = false;
+static bool RIGHT_HELD = false;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (action == GLFW_PRESS) {
+		switch (key) {
+			case GLFW_KEY_LEFT:
+				LEFT_HELD = true;
+				break;
+			case GLFW_KEY_RIGHT:
+				RIGHT_HELD = true;
+				break;
+		}
+	}
+
+	if (action == GLFW_RELEASE) {
+		switch (key) {
+			case GLFW_KEY_LEFT:
+				LEFT_HELD = false;
+				break;
+			case GLFW_KEY_RIGHT:
+				RIGHT_HELD = false;
+				break;
+		}
+	}
+}
+
 int main()
 {
 
@@ -123,11 +151,11 @@ int main()
 
 	//std::string shaderPath("resources/shaders/");
 	Shader myShader("resources/shaders/vertex/NoTexTransform.shader", "resources/shaders/fragment/ColorUniform.shader");
-	Canvas2D canva(100, 100, & myShader);
+	Canvas2D canva(100, 50, & myShader);
 
 	Rect2D r1 = Rect2D(0, 0, 20, 20);
-	r1.translate(50 - (r1.getLength() / 2), 50 - (r1.getHeight() / 2));
-
+	r1.translate(canva.getCanvasLength() / 2 - (r1.getLength() / 2), canva.getCanvasHeight() / 2 - (r1.getHeight() / 2));
+	myShader.useShader();
 	myShader.setUniform1i("hex_color", 0x15A477);
 
 	std::cout << "Buffer stuff dealt with" << std::endl;
@@ -147,6 +175,7 @@ int main()
 	while (!glfwWindowShouldClose(window)) // checks if the window has been 'told' to close
 	{
 		processInput(window); // handle user input
+		glfwSetKeyCallback(window, key_callback);
 
 		while (glfwGetTime() < lastTime + 1.0/TARGET_FPS) {
 
@@ -154,6 +183,19 @@ int main()
 			glClearColor(0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 0xFF / RGB_CEIL, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_DEPTH_BUFFER_BIT);
+			
+			// in place rotation
+			//r1.translate(r1.getLength() / 2, r1.getHeight() / 2);
+			//r1.rotate(0.001f, glm::vec3(0.0f, 0.0f, 1.0f));
+			//.translate(-1 * r1.getLength() / 2, -1 * r1.getHeight() / 2);
+
+			if (LEFT_HELD) {
+				r1.translate(-.1f, 0.f);
+			} 
+
+			if (RIGHT_HELD) {
+				r1.translate(.1f, 0.f);
+			}
 
 			canva.renderShape(r1);
 

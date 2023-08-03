@@ -59,6 +59,10 @@ void Shape2D::translate(float x, float y) {
 	model = glm::translate(model, glm::vec3(x, y, 0));
 }
 
+void Shape2D::translate(glm::vec2 trans_vec) {
+	model = glm::translate(model, glm::vec3(trans_vec, 0));
+}
+
 void Shape2D::rotate(float radians, glm::vec3 rotate_vec) {
 	model = glm::rotate(model, radians, rotate_vec);
 }
